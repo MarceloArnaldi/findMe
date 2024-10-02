@@ -1,0 +1,25 @@
+{
+    "instalacao" : 1,
+    "locais"     : [
+        { "nome"  : "principal",
+          "areas" : [  
+            { "nome" :"Home Theater",
+                "espectros" : [
+                    {
+                        "dbssid_code": 1,
+                        "a": 450,
+                        "b": 40,
+                        "c": 50,
+                        "d": 52
+                    },
+                    {
+                        "dbssid_code": 2,
+                        "a": 30,
+                        "b": 40,
+                        "c": 34,
+                        "d": 22
+                    }
+                ]
+            }]
+        }]
+}

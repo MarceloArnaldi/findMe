@@ -1,0 +1,89 @@
+adaptador    : Wi-Fi 2
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:ee : 81
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:e6 : 33
+SSID         : SSID Desconhecido : 78:8c:b5:51:99:93 : 86
+SSID         : SSID Desconhecido : 78:8c:b5:51:ad:b3 : 35
+SSID         : SSID Desconhecido : fa:8f:ca:3e:eb:71 : 46
+SSID         : PAT&VICTOR_2G : 68:02:b8:f9:bf:42 : 81
+SSID         : ArnaldiNET : a4:33:d7:01:65:c8 : 83
+SSID         : ArnaldiNET : a6:33:d7:01:65:cf : 87
+SSID         : PAT&VICTOR_5G : 68:02:b8:f9:bf:43 : 62
+SSID         : CUNHA : 48:2c:d0:8e:3a:ec : 40
+SSID         : CUNHA : 48:2c:d0:8e:3a:e8 : 82
+SSID         : Arnaldi : 7a:8c:b5:21:99:92 : 87
+SSID         : Arnaldi : 7a:8c:b5:71:ad:b3 : 35
+SSID         : Arnaldi : 7a:8c:b5:71:99:93 : 86
+SSID         : CUNHA-Iot : 48:2c:d0:8e:3a:ea : 82
+SSID         : [LG_CeilingCassette A/C]2a10 : a6:36:c7:9d:2a:10 : 75
+SSID         : Sala de TV.o, : fa:8f:ca:6e:63:9e : 88
+
+Sala TV
+
+adaptador    : Wi-Fi 2
+SSID         : Federal 3 : f2:a7:31:72:4b:63 : 13
+SSID         : SSID Desconhecido : fa:8f:ca:86:eb:94 : 72
+SSID         : SSID Desconhecido : fa:8f:ca:3e:eb:71 : 31
+SSID         : COZINHA 2.4G : e6:54:20:9f:26:0e : 14
+SSID         : SUPER FAMILIA 2G TP-Link : d4:6e:0e:b2:0e:9f : 31
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:ee : 60
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:e3 : 31
+SSID         : SSID Desconhecido : 78:8c:b5:51:99:93 : 38
+SSID         : SSID Desconhecido : 78:8c:b5:51:ad:b3 : 99
+SSID         : SSID Desconhecido : 78:8c:b5:51:99:92 : 82
+SSID         : SUPER FAMILIA 2G TP-Link_EXT : cc:32:e5:a5:e3:5a : 24
+SSID         : PAT&VICTOR_2G : 68:02:b8:f9:bf:42 : 70
+SSID         : Arnaldi : 7a:8c:b5:21:ad:b2 : 98
+SSID         : Arnaldi : 7a:8c:b5:21:99:92 : 53
+SSID         : Arnaldi : 7a:8c:b5:71:ad:b3 : 91
+SSID         : Arnaldi : 7a:8c:b5:71:99:93 : 46
+SSID         : ArnaldiNET : a4:33:d7:01:65:c8 : 62
+SSID         : CUNHA : 48:2c:d0:8e:3a:e8 : 26
+SSID         : [LG_CeilingCassette A/C]2a10 : a6:36:c7:9d:2a:10 : 50
+SSID         : Sala de TV.o, : fa:8f:ca:6e:63:9e : 78
+
+
+Home Theater
+
+SSID         : SUPER FAMILIA 5G TP-Link : d4:6e:0e:b2:0e:9e : 13
+SSID         : FAMILIA NISIGUCHE : c6:3d:d9:74:93:a7 : 20
+SSID         : Orion : 44:3b:32:f4:1c:6d : 26
+SSID         : [LG_CeilingCassette A/C]bff6 : a6:36:c7:ff:bf:f6 : 81
+SSID         : Clarinha_2.4G : 90:0a:62:36:14:7f : 35
+SSID         : CORREDOR 5G : 98:da:c4:b7:de:93 : 29
+SSID         : Rede_Mesh : 68:77:da:5c:24:24 : 8
+SSID         : Toreli : a4:22:49:92:ea:55 : 24
+SSID         : SSID Desconhecido : 6a:a4:b7:b7:a1:2f : 20
+SSID         : SSID Desconhecido : 78:8c:b5:51:ad:b2 : 70
+SSID         : SSID Desconhecido : 78:8c:b5:51:99:93 : 86
+SSID         : SSID Desconhecido : 78:8c:b5:51:ad:b3 : 50
+SSID         : SSID Desconhecido : 78:8c:b5:51:99:92 : 82
+SSID         : HOME12 : 84:d8:1b:b3:70:2b : 24
+SSID         : HOME12 : e4:c3:2a:2e:f3:ae : 53
+SSID         : luiza24 : 1c:3b:f3:f3:02:27 : 38
+SSID         : Saba-Sala : 34:0a:33:24:4f:e4 : 43
+SSID         : RCVS : 60:a4:b7:b7:a1:2e : 67
+SSID         : CORREDOR 2,4 : 98:da:c4:b7:de:94 : 70
+SSID         : Valente1 : 6c:55:e8:68:1e:b8 : 67
+SSID         : Federal 3 : f2:a7:31:72:4b:63 : 13
+SSID         : SSID Desconhecido : fa:8f:ca:86:eb:94 : 14
+SSID         : SSID Desconhecido : fa:8f:ca:3e:eb:71 : 88
+SSID         : COZINHA 2.4G : e6:54:20:9f:26:0e : 14
+SSID         : SUPER FAMILIA 2G TP-Link : d4:6e:0e:b2:0e:9f : 80
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:ee : 84
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:e6 : 20
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:eb : 91
+SSID         : Pat&Victor Twibi : 24:fd:0d:e3:dd:e3 : 31
+SSID         : SUPER FAMILIA 2G TP-Link_EXT : cc:32:e5:a5:e3:5a : 70
+SSID         : PAT&VICTOR_2G : 68:02:b8:f9:bf:42 : 92
+SSID         : Arnaldi : 7a:8c:b5:21:ad:b2 : 99
+SSID         : Arnaldi : 7a:8c:b5:21:99:92 : 99
+SSID         : Arnaldi : 7a:8c:b5:71:ad:b3 : 35
+SSID         : Arnaldi : 7a:8c:b5:71:99:93 : 95
+SSID         : ArnaldiNET : a4:33:d7:01:65:c8 : 97
+SSID         : ArnaldiNET : a6:33:d7:01:65:cf : 90
+SSID         : PAT&VICTOR_5G : 68:02:b8:f9:bf:43 : 78
+SSID         : CUNHA : 48:2c:d0:8e:3a:ec : 83
+SSID         : CUNHA : 48:2c:d0:8e:3a:e8 : 26
+SSID         : [LG_CeilingCassette A/C]2a10 : a6:36:c7:9d:2a:10 : 80
+SSID         : Sala de TV.o, : fa:8f:ca:6e:63:9e : 99
+

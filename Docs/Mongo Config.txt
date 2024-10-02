@@ -1,0 +1,31 @@
+findMed
+mongoDB 
+IP (177.161.233.50) 
+username marceloarnaldi
+senha BITh5VIzm3vY3Eoc
+--------------------
+Node
+npm install mongodb
+mongodb+srv://marceloarnaldi:BITh5VIzm3vY3Eoc@clusterdev.syoui.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDev
+--------------------
+python -m pip install "pymongo[srv]"
+mongodb+srv://marceloarnaldi:BITh5VIzm3vY3Eoc@clusterdev.syoui.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDev
+--------------------
+You need to secure your MongoDB Atlas cluster before you can use it. Set which users and IP addresses can access your cluster now. Read more 
+
+Add a connection IP address
+Your current IP address (177.161.233.50) has been added to enable local connectivity. Add another later in 
+Network Access :: https://cloud.mongodb.com/v2/66fc49209193da0b19a97a10#/security/network/accessList
+.
+Create a database user
+A database user has been added to this project. Create another user later in 
+Database Access
+.
+You'll need your database user's credentials in the next step.
+
+MongoDB Compass?
+
+
+mongodb+srv://marceloarnaldi:<senha>@clusterdev.syoui.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDev
+
+https://github.com/MarceloArnaldi/findMe.git
