@@ -142,14 +142,14 @@ print(f"Sistema operacional: {sistema_operacional}")
 sistema = identificar_sistema_operacional()
 
 if sistema == "Windows":
-    #os.system('cls')
+    os.system('cls')
     adaptador = obter_nome_adaptador_wifi()
     print('adaptador    :',adaptador)
     wifi_dados = listar_redes_wifi_Windows()
     wifi_info = extrair_redes_wifi(wifi_dados)
     for rede in wifi_info:
         print('SSID         :',rede[0],':',rede[1],':',rede[2])      
-        print(calcular_distancia,int(rede[2]),-50,2)
+        print(calcular_distancia(int(rede[2]),-50,2))
 elif sistema == "Linux":
     os.system('clear')
     wifi_info = listar_redes_wifi_Linux()
