@@ -21,3 +21,9 @@ else:
 
 instalacaoObj = consulta_instalacao(instalacao)
 print(json.dumps(instalacaoObj,indent=4))
+
+local   = os.environ.get('LOCAL')
+area    = os.environ.get('AREA')
+
+print('LOCAL    :',local)
+print('AREA     :',area)

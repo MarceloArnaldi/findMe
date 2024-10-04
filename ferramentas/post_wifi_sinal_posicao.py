@@ -82,48 +82,6 @@ def get_ssid_top6():
     return espectros_sinal_ordenado[:6]
 # - Get SSID da coordenada usando como referencia o Top 6 -------------------------------------------
 def get_ssid(ssid_top6):
-    # ssids = [        
-    #     {
-    #         "ssid": "NomeDaRede2",
-    #         "bssid": '16:11:11:11',
-    #         "sinal": 3
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede31",
-    #         "bssid": '31:11:11:11',
-    #         "sinal": 32
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede1",
-    #         "bssid": '15:11:11:11',
-    #         "sinal": 2
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede4",
-    #         "bssid": '18:11:11:11',
-    #         "sinal": 6
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede5",
-    #         "bssid": '55:11:11:11',
-    #         "sinal": 7
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede61",
-    #         "bssid": '61:11:11:11',
-    #         "sinal": 62
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede7",
-    #         "bssid": '77:11:11:11',
-    #         "sinal": 8
-    #     },
-    #     {
-    #         "ssid": "NomeDaRede6",
-    #         "bssid": '12:11:11:11',
-    #         "sinal": 9
-    #     }
-    # ]
     wifi_dados = listar_redes_wifi()
     ssids = extrair_redes_wifi(wifi_dados)
     ssid_intersecao = [
@@ -163,6 +121,7 @@ def extrair_redes_wifi(texto):
     ssid_atual = None
 
     for linha in texto.splitlines():
+        print(linha)
         match_ssid = padrao_ssid.search(linha)
         if match_ssid:
             ssid_atual = match_ssid.group(1) if match_ssid.group(1).strip() else "SSID Desconhecido"
