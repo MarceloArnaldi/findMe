@@ -1,0 +1,2 @@
+python post_wifi_sinal_posicao.py o
+show
