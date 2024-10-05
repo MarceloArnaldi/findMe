@@ -1,3 +1,3 @@
 SET INSTALACAO=1
 SET LOCAL=unico
-SET AREA=Home Theater
+SET AREA=Sala de Jantar
