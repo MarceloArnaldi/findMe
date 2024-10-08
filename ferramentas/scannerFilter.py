@@ -1,9 +1,11 @@
 import os
 import sys
+#sys.path.insert(1, 'C:/Users/124606778/Documents/Pessoal/projetos/findMe')
 sys.path.insert(1, '../')
+
 from comum      import p, pj, pausa
 from comumDB    import consulta_instalacao, grava_instalacao, exclui_todos_espectros, registra_espectros, existe_area, add_area
-from comumWIFI  import get_index_bssid, scanner, scanner_comparando, normalizando_redes, monta_espectros
+from comumWIFI  import get_index_bssid, scanner_comparando_filter, normalizando_redes, monta_espectros, scanner_filter
 
 os.system('cls')
 
@@ -47,10 +49,12 @@ else:
     exit()
 os.system('cls')
 # - primeira scanner --- usado para identiifica a direcao do roteador ---
-redesNorte = scanner('norte')
-redesSul   = scanner('sul')
-redesLeste = scanner('leste')
-redesOeste = scanner('oeste')
+bssids = ['7a:8c:b5:21:99:92','7a:8c:b5:21:99:93']
+bssids = ['7a:8c:b5:71:ad:b3','7a:8c:b5:21:ad:b2','7a:8c:b5:21:99:92','7a:8c:b5:21:99:93']
+redesNorte = scanner_filter('norte',bssids)
+redesSul   = scanner_filter('sul',bssids)
+redesLeste = scanner_filter('leste',bssids)
+redesOeste = scanner_filter('oeste',bssids)
 direcaoNS  = {}
 for rede in redesNorte:     
     index = get_index_bssid(redesSul, rede['bssid'])
@@ -70,10 +74,10 @@ for rede in redesLeste:
             direcaoLO_ = 'l'
         direcaoLO[rede['bssid']] = direcaoLO_
 # - scaneando os pontos -------------------------------------------------
-redesNorte = scanner_comparando('n', 'norte', direcaoNS)
-redesSul   = scanner_comparando('s', 'sul', direcaoNS)
-redesLeste = scanner_comparando('l', 'leste', direcaoLO)
-redesOeste = scanner_comparando('o', 'oeste', direcaoLO)
+redesNorte = scanner_comparando_filter('n', 'norte', direcaoNS, bssids)
+redesSul   = scanner_comparando_filter('s', 'sul', direcaoNS, bssids)
+redesLeste = scanner_comparando_filter('l', 'leste', direcaoLO, bssids)
+redesOeste = scanner_comparando_filter('o', 'oeste', direcaoLO, bssids)
 redesNorteNew, redesSulNew, redesLesteNew, redesOesteNew = normalizando_redes(redesNorte, redesSul, redesLeste, redesOeste)
 espectros = []
 espectros = monta_espectros(espectros, redesNorteNew, 'n')

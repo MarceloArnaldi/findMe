@@ -1,6 +1,7 @@
 import re
 import json
 import subprocess
+from comum import pj
 from pymongo import MongoClient
 
 # - rotinas mongo ---------------------------------------------------------------------------------
@@ -101,24 +102,33 @@ def get_ssid_sinais(data, local_, area_, bssid_):
         espectro = data['locais'][local_index]['areas'][area_index]['espectros'][index]
         return espectro
     else:
-        return None    
+        return None
+def apaga_espectro(data, local_, area_, bssid_):
+    existe, index, area_index, local_index = espectro_existe(data, local_, area_, bssid_)
+    if existe:
+        print('exluir ->',data['locais'][local_index]['areas'][area_index]['espectros'][index])
+        del data['locais'][local_index]['areas'][area_index]['espectros'][index]    
+    return True
 # - Exclui TODOS espectro ---------------------------------------------------------------------------
 def exclui_todos_espectros(data, local_, area_):
-    instalacao_id = data['instalacao']
-    local_index = next((i for i, d in enumerate(data['locais']) if d["nome"] == local_), -1)
-    if local_index > -1:        
-        existe_area_, area_index = existe_area(data, local_, area_)
-        if existe_area_:
-            data['locais'][local_index]['areas'][area_index]['espectros'] = []
-            grava_instalacao(instalacao_id, data)    
+    existe, area_index, local_index = existe_area(data, local_, area_)
+    if existe:
+        data['locais'][local_index]['areas'][area_index]['espectros'] = []
+    return True
 # - recupera TODOS espectros-------------------------------------------------------------------------
 def recupera_todos_espectros(data, local_, area_):
-    local_index = next((i for i, d in enumerate(data['locais']) if d["nome"] == local_), -1)
-    if local_index > -1:        
-        existe_area_, area_index = existe_area(data, local_, area_)
-        if existe_area_:
-            return data['locais'][local_index]['areas'][area_index]['espectros']
-# - Registra o sinal dos SSID de cada ponto ---------------------------------------------------------
+    existe_area_, area_index, local_index = existe_area(data, local_, area_)
+    if existe_area_:
+        return data['locais'][local_index]['areas'][area_index]['espectros']
+    else:
+        return None
+# - registra TODOS espectros-------------------------------------------------------------------------
+def registra_espectros(data, local_, area_, espectros_):
+    existe, area_index, local_index = existe_area(data, local_, area_)
+    if existe:
+        data['locais'][local_index]['areas'][area_index]['espectros'] = espectros_
+    return True
+# - registra o sinal dos SSID de cada ponto ---------------------------------------------------------
 def registra_espectro(data, local_, area_, espectros_sinal_, posicao_):
     instalacao_id = data['instalacao']
     local_index = next((i for i, d in enumerate(data['locais']) if d["nome"] == local_), -1)

@@ -1,6 +1,9 @@
+import os
 import re
 import time
+import pyautogui
 import subprocess
+from comum import p, pausa, atualiza_redes_pc
 
 # - existe a rede ------------------- ---------------------------------------------------------------
 def get_bssid(redes, bssid_):
@@ -17,8 +20,53 @@ def get_ssid_top(top):
     print(ssids)
     espectros_sinal_ordenado = sorted(ssids, key=lambda x: x['sinal'], reverse=True)    
     return espectros_sinal_ordenado[:top]
-# - Get SSID ----------------------------------------------------------------------------------------
-def scanner():
+# - Get SSID simples --- ----------------------------------------------------------------------------
+def scanner_basic():
+    wifi_dados = listar_redes_wifi()
+    redes = extrair_redes_wifi(wifi_dados)
+    #print('scanning ...',' ' * 100, end='\r',flush=True)
+    wifi_dados = listar_redes_wifi()
+    redes_ = extrair_redes_wifi(wifi_dados)        
+    for rede in redes_:
+        index = get_index_bssid(redes, rede['bssid'])
+        if index == -1:
+            redes.append(rede)
+        else:
+            redes[index] = rede
+    return redes
+# - Get SSID ONE for cardiar ----------------------------------------------------------------------------
+def scannerOne(local, bssid):
+    pausa(f'Va para o {local}!',10)
+    atualiza_redes_pc()
+    pausa(f'Va para o {local}!',5)
+    p(f'Scaneando redes {local} ...')
+    wifi_dados = listar_redes_wifi()
+    redes = extrair_redes_wifi(wifi_dados)
+    for x in range(3):        
+        print(f'scanning {x} ...', end='\r')
+        wifi_dados = listar_redes_wifi()
+        redes_ = extrair_redes_wifi(wifi_dados)
+        print(redes_)
+        print(f'scanning {x} ... found {len(redes_)}', end='\r')
+        for rede in redes_:
+            index = get_index_bssid(redes, rede['bssid'])
+            if index == -1:
+                redes.append(rede)
+            else:
+                redes[index] = rede
+        pyautogui.click(1700,1060)
+        pausa()
+    print('')
+    for rede in redes: print(rede)
+    pausa()
+    os.system('cls')
+    return redes
+# - Get SSID for cardiar ----------------------------------------------------------------------------
+def scanner(local):
+    pausa(f'Va para o {local}!',10)
+    atualiza_redes_pc()
+    pausa(f'Va para o {local}!',5)
+    p(f'Scaneando redes {local} ...')
     wifi_dados = listar_redes_wifi()
     redes = extrair_redes_wifi(wifi_dados)
     for x in range(3):        
@@ -32,11 +80,19 @@ def scanner():
                 redes.append(rede)
             else:
                 redes[index] = rede
-        time.sleep(2)
+        pyautogui.click(1700,1060)
+        pausa()
     print('')
+    for rede in redes: print(rede)
+    pausa()
+    os.system('cls')
     return redes
-# - Get SSID ----------------------------------------------------------------------------------------
-def scanner_comparando(ponto, direcao):
+# - Get SSID comparando com a direcao que aumenta ou diminui o sinal --------------------------------
+def scanner_comparando(ponto, local, direcao):
+    pausa(f'Va para o {local}!',10)
+    atualiza_redes_pc()
+    pausa(f'Va para o {local}!',5)
+    p(f'Scaneando redes {local} ...')
     wifi_dados = listar_redes_wifi()
     redes = extrair_redes_wifi(wifi_dados)
     for x in range(5):        
@@ -60,9 +116,40 @@ def scanner_comparando(ponto, direcao):
                         if ponto != direcao.get(rede['bssid'], None) and direcao.get(rede['bssid'], None) != None:
                             #print('diminui -->',redes[index],' - ',rede,' - ',ponto,direcao.get(rede['bssid'], None))
                             redes[index]['sinal'] = rede['sinal']
-        time.sleep(2)
-    print('',end="\n",flush=True)
+        pyautogui.click(1700,1060)
+        pausa()
+    #print('',end="\n",flush=True)
+    print('')
+    for rede in redes: print(rede)
+    pausa()
+    os.system('cls')
     return redes
+# - Filtrando existente nos quatro pontos cardeais --------------------------------------------------
+def normalizando_redes(redes_norte, redes_sul, redes_leste, redes_oeste):    
+    bssids_norte    = {rede['bssid'] for rede in redes_norte}
+    bssids_sul      = {rede['bssid'] for rede in redes_sul}
+    bssids_leste    = {rede['bssid'] for rede in redes_leste}
+    bssids_oeste    = {rede['bssid'] for rede in redes_oeste}
+    bssids_comuns   = bssids_norte & bssids_sul & bssids_leste & bssids_oeste
+    redes_norte_new = [rede for rede in redes_norte if rede['bssid'] in bssids_comuns]
+    redes_sul_new   = [rede for rede in redes_sul   if rede['bssid'] in bssids_comuns]
+    redes_leste_new = [rede for rede in redes_leste if rede['bssid'] in bssids_comuns]
+    redes_oeste_new = [rede for rede in redes_oeste if rede['bssid'] in bssids_comuns]
+    return redes_norte_new, redes_sul_new, redes_leste_new, redes_oeste_new
+# - monta espectros ---------------------------------------------------------------------------------
+def monta_espectros(espectros, redes, cardeal):
+    for rede in redes:
+        bssid = next((item for item, d in enumerate(espectros) if d['bssid'] == rede['bssid']),-1)
+        if bssid == -1:
+            espectro = {
+                    'ssid'  : rede['ssid'],
+                    'bssid' : rede['bssid'],
+                    cardeal : rede['sinal']
+                }
+            espectros.append(espectro)
+        else:
+            espectros[bssid][cardeal] = rede['sinal']
+    return espectros
 # - Get SSID da coordenada usando como referencia o Top 6 -------------------------------------------
 def get_ssid(ssid_top6=None):
     wifi_dados = listar_redes_wifi()
