@@ -31,6 +31,14 @@ def p(msg):
         if msg != None:
             print(msg)
 
+def pt(msg, msg2, tabulacao=15):
+    if msg != None:        
+        if tabulacao >= len(msg):
+            print(msg,' ' * (tabulacao - len(msg)),':',msg2)
+        else:
+            print(msg,':',msg2)
+
+
 def pausa(msg='', pausa=2):
     for x in range(pausa - 1):
         if msg != '':

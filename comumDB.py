@@ -25,6 +25,9 @@ def existe_local(data, local_):
         if local['nome'] == local_:
             return True, x
     return False, -1
+def get_locais(data):
+    locais = [local['nome'] for local in data['locais']]
+    return locais
 def get_local(data, local_):
     existe, index = existe_local(data, local_)
     if existe:
@@ -57,6 +60,12 @@ def existe_area(data, local_, area_):
                 if area.get("nome") == area_:
                     return True, a, l
     return False, -1, -1
+def get_areas(data, local_):
+    existe, index = existe_local(data, local_)
+    if existe:
+        areas = [area['nome'] for area in data['locais'][index]['areas']]
+        return areas
+    return None
 def get_area(data, local_, area_):
     existe, index, local_index = existe_area(data, local_, area_)
     if existe:

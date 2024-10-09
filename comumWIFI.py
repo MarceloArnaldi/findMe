@@ -238,6 +238,12 @@ def get_ssid(ssid_top6=None):
 def calcular_distancia(rssi, p0, n):
     return 10 ** ((p0 - rssi) / (10 * n))
 
+def calcular_distancia_diferenca(s1, s2):
+    d1 = calcular_distancia(s1,-50,4)
+    d2 = calcular_distancia(s2,-50,4)
+    d = abs((d1 - d2) * 10)
+    return d
+
 def obter_nome_adaptador_wifi():
     try:
         resultado = subprocess.check_output(['netsh', 'interface', 'show', 'interface'], encoding='utf-8')

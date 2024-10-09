@@ -18,8 +18,8 @@ if os.environ.get('AREA') == None:
     area = input('informe o area : ')
     os.system('SET AREA='+area)
     exit()
-local   = os.environ.get('LOCAL')
-area    = os.environ.get('AREA')
+local = os.environ.get('LOCAL')
+area  = os.environ.get('AREA')
 sai = False
 while not sai:
     area = input(f'Entre com a AREA ({area}): ').strip() or area
@@ -50,13 +50,9 @@ while not sai:
     os.system('cls')
     # - scanner -------------------------------------------------------------
     redes = scanner_media()
-    #for rede in redes: print(rede)
     espectros = []
     espectros = monta_espectros(espectros, redes, 'c')
-    #pj(espectros)
     exclui_todos_espectros(instalacao, local, area)
     registra_espectros(instalacao, local, area, espectros)
     grava_instalacao(instalacao_id, instalacao)
     pj(instalacao)
-
-

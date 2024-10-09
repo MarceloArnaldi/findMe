@@ -1,1 +1,1 @@
-python findMe.py 1
+python findMe.py
