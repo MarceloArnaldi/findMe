@@ -7,19 +7,25 @@ from comum      import p, pj, pausa
 from comumDB    import consulta_instalacao, grava_instalacao, existe_area, add_area, exclui_todos_espectros, registra_espectros
 from comumWIFI  import scanner_media, monta_espectros
 
-instalacao_id = 1
-instalacao = consulta_instalacao(instalacao_id)
-
+if os.environ.get('INSTALACAO') == None:
+    id = input('informe o Instalação : ')
+    os.environ['INSTALACAO'] = id
+    exit()
 if os.environ.get('LOCAL') == None:
-    local = input('informe o local : ')
-    os.system('SET LOCAL='+local)
+    id = input('informe o local : ')
+    os.environ['LOCAL'] = id
     exit()
 if os.environ.get('AREA') == None:
-    area = input('informe o area : ')
-    os.system('SET AREA='+area)
+    id = input('informe o area : ')
+    os.environ['AREA'] = id
     exit()
-local = os.environ.get('LOCAL')
-area  = os.environ.get('AREA')
+
+instalacao_id = os.environ.get('INSTALACAO')
+local         = os.environ.get('LOCAL')
+area          = os.environ.get('AREA')
+
+instalacao = consulta_instalacao(instalacao_id)
+
 sai = False
 while not sai:
     area = input(f'Entre com a AREA ({area}): ').strip() or area

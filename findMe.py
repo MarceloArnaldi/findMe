@@ -3,9 +3,9 @@ import sys
 import time
 import pandas as pd
 sys.path.insert(1, '../')
-from comum import pt
+from comum import p, pt
 from comumDB import consulta_instalacao
-from comumWIFI import scanner_basic, calcular_distancia, calcular_distancia_diferenca
+from comumWIFI import scanner_basic, calcular_distancia_diferenca
 
 os.system('cls')
 
@@ -58,12 +58,23 @@ while True:
                     redes[index][area+'_'] = None    
         # - probabilidade-------------------------------------------------------------------------------------------
         pt('Local',local['nome'])
-        inversos = {k: 1/v for k, v in soma.items()}
+        inversos = {k: 1 / v for k, v in soma.items()}
         soma_inversos = sum(inversos.values())
         probabilidades = {k: v/soma_inversos for k, v in inversos.items()}
-        for p in probabilidades:
-            p_ = probabilidades[p] * 100 
-            pt(p,'%.2f' % p_ +' %')
+
+        area_provavel_percentual = 0
+        for i, pr in enumerate(probabilidades):
+            pr_ = probabilidades[pr] * 100 
+            if area_provavel_percentual < pr_: 
+                area_provavel_percentual = pr_
+                area_provavel = i
+        for i, pr in enumerate(probabilidades):
+            pr_ = probabilidades[pr] * 100 
+            if i == area_provavel:
+                pt(pr,'%.2f' % pr_ +' % <----')
+            else:
+                pt(pr,'%.2f' % pr_ +' %')
+        p('-')
         # - display tabulado - debug ------------------------------------------------------------------------------
         if show:
             pd.set_option('display.max_rows', None)
@@ -72,5 +83,5 @@ while True:
             df_redes = pd.DataFrame(redes)
             print(df_redes[colunas_ordenadas])    
 
-    time.sleep(3)
+    time.sleep(10)
     os.system('cls')

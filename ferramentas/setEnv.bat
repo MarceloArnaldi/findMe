@@ -1,3 +1,4 @@
+@echo off
 SET INSTALACAO=1
-SET LOCAL=unico
-SET AREA=Social
+SET LOCAL=local_2
+SET AREA=Terraco
