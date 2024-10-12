@@ -1,5 +1,5 @@
 # findMe
-### v.01.00.00 - 01/10/2024 - Marcelo Arnaldi – marcelo.arnaldi@gmail.com
+### v.00.01.00 - 01/10/2024 - Marcelo Arnaldi – marcelo.arnaldi@gmail.com
 
 >Localizacao de itens com triangulação de antemas
 
