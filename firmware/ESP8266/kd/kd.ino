@@ -4,7 +4,7 @@
  * 
  * Monitor Serial : 115.200
  * 
- * Versao 0.01 - 10/10/2024 - 1st Version
+ * Versao 0.01.01 - 10/10/2024 - 1st Version
  * 
  * Doko - onde
  * KOCHIRA (nesta direção), SOCHIRA (nessa direção), ACHIRA (naquela direção), e DOCHIRA (em qual direção
