@@ -1,7 +1,6 @@
 import os
 import sys
 import json
-sys.path.insert(1, '../')
 from comumDB import consulta_instalacao
 
 os.system('cls')

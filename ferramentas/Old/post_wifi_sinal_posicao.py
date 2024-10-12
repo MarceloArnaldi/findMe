@@ -75,11 +75,13 @@ def registra_espectro(data, local_, area_, espectros_sinal_, posicao_):
                     data['locais'][local_index]['areas'][area_index]['espectros'][espectro_index][posicao_] = espectro['sinal']
                 grava_instalacao(instalacao_id, data)   
 # - rotinas wifi -------------------------------------------------------------------------------------------------
-def get_ssid_top6():
+def get_ssid_top(top):
     wifi_dados = listar_redes_wifi()
     ssids = extrair_redes_wifi(wifi_dados)
-    espectros_sinal_ordenado = sorted(ssids, key=lambda x: x['sinal'], reverse=True)
-    return espectros_sinal_ordenado[:6]
+    print('espectros_sinal_ordenado')
+    print(ssids)
+    espectros_sinal_ordenado = sorted(ssids, key=lambda x: x['sinal'], reverse=True)    
+    return espectros_sinal_ordenado[:top]
 # - Get SSID da coordenada usando como referencia o Top 6 -------------------------------------------
 def get_ssid(ssid_top6):
     wifi_dados = listar_redes_wifi()
@@ -121,7 +123,6 @@ def extrair_redes_wifi(texto):
     ssid_atual = None
 
     for linha in texto.splitlines():
-        print(linha)
         match_ssid = padrao_ssid.search(linha)
         if match_ssid:
             ssid_atual = match_ssid.group(1) if match_ssid.group(1).strip() else "SSID Desconhecido"
@@ -166,10 +167,10 @@ instalacao = 1
 instalacaoObj = consulta_instalacao(instalacao)
 if posicao == 'c':
     exclui_todos_espectros(instalacaoObj, local, area )
-    espectros_sinal_top6 = get_ssid_top6()
-    #print(json.dumps(espectros_sinal_top6,indent=4))
-    registra_espectro(instalacaoObj, local, area, espectros_sinal_top6, posicao)
+    espectros_sinal_top = get_ssid_top(6)
+    #print(json.dumps(espectros_sinal_top,indent=4))
+    registra_espectro(instalacaoObj, local, area, espectros_sinal_top, posicao)
 else:
-    espectros_sinal_top6 = recupera_todos_espectros(instalacaoObj,local,area)
-    espectros_sinal = get_ssid(espectros_sinal_top6)
+    espectros_sinal_top = recupera_todos_espectros(instalacaoObj,local,area)
+    espectros_sinal = get_ssid(espectros_sinal_top)
     registra_espectro(instalacaoObj, local, area, espectros_sinal, posicao)
