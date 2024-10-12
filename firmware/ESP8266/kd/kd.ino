@@ -6,6 +6,9 @@
  * 
  * Versao 0.01 - 10/10/2024 - 1st Version
  * 
+ * Doko - onde
+ * KOCHIRA (nesta direção), SOCHIRA (nessa direção), ACHIRA (naquela direção), e DOCHIRA (em qual direção
+ * 
  */
 
 #include <dummy.h>
@@ -29,6 +32,7 @@ const int cSaveCredentials  = 4; // Grava o SSID e senha informados
 const int cConnectToSSID    = 5; // Tenta a conexao na rede WIFI do cliente
 const int cStatusSSID       = 6; // Verifica a conexao na rede WIFI do cliente
 const int cConnectSSID_Ok   = 7; // Informa via LED que a conexÃ£o na rede SSID informada foi com sucesso
+const int cWebSocketMenu    = 11; // Aguarda comando para enviar os dados de configuracao para o App ou o comando para conectar a rede SSID do cliente 
 const int cApagarEEPROM     = 90;
 const int cLerEEPROM        = 91;
 const int cGravarEEPROM     = 92;
@@ -67,9 +71,14 @@ char          mqttPort[32] = "";       // vmqttPort
 String        vkdid    = "0";          // ID do modulo
 String        vkdip    = "0.0.0.0";    // ID do mudulo
 String        appToken = "0000000000"; // ID do APP - quando o modulo eh adcionado no APP ele recebe o ID do APP
+// Modulo - usado para atualizar remotamewnte - WebSocket
+String        vKdID;
+String        vKdIP;
+
 // SSID AP
 char          aSSID[19];
-const char    *softAP_password = "legooluskit";
+//const char    *softAP_password = "legooluskit"; 
+const char    *softAP_password = "achira1234@";
 IPAddress     apIP(aAP_IP[0], aAP_IP[1], aAP_IP[2], aAP_IP[3]);
 IPAddress     netMsk(255, 255, 255, 0);
 // SSID Client
@@ -83,24 +92,25 @@ IPAddress     wifiIP = IPAddress(0, 0, 0, 0);
 WiFiServer    vServer(SocketPort); // Porta
 WiFiClient    vClient;
 // MQTT
-WiFiClient MQTTClient;
-WiFiClient MQTTClientLocal;
-PubSubClient MQTT(MQTTClient);
-PubSubClient MQTTLocal(MQTTClientLocal);
-String      vmqttURL  = "mqtt.legoolus.com.br"; // BROKER_MQTT
-String      vmqttPort = "1883"; // BROKER_PORT
-char*       BROKER_MQTT_LOCAL  = "255.255.255.255";
-const char* BROKER_MQTT        = "mqtt.legoolus.com.br"; 
-const int   BROKER_PORT        = 1883;
-const char* BROKER_USER        = "obtnegwv"; 
-const char* BROKER_PASSWORD    = "7_JhuAE6nm02"; 
+WiFiClient    MQTTClient;
+WiFiClient    MQTTClientLocal;
+PubSubClient  MQTT(MQTTClient);
+PubSubClient  MQTTLocal(MQTTClientLocal);
+String        vmqttURL  = "mqtt.legoolus.com.br"; // BROKER_MQTT
+String        vmqttPort = "1883"; // BROKER_PORT
+char*         BROKER_MQTT_LOCAL  = "255.255.255.255";
+const char*   BROKER_MQTT        = "mqtt.legoolus.com.br"; 
+const int     BROKER_PORT        = 1883;
+const char*   BROKER_USER        = "obtnegwv"; 
+const char*   BROKER_PASSWORD    = "7_JhuAE6nm02";
 
 void setup() {
   // Hardware
   pinMode(D0, OUTPUT);
   Serial.begin(115200);
   // Nome da rede WIFI armnazenada em aSSID
-  vAux = "LegoolusKit";
+  //vAux = "LegoolusKit";
+  vAux = "ModuloKade_";// DOCHIRA
   vAux.concat(cTpNS);
   vAux.concat(cNS);
   vAux.toCharArray(aSSID, 20); 
@@ -187,11 +197,104 @@ void loop() {
     case cAPConnect:     
       if (WiFi.softAPgetStationNum() > 0) {
         msgln ( "Client Connect" );                
-        vEstado = cNothing;                
+        vEstado = cWebServer;
         vServer.begin();
       }
       digitalWrite(LED_1, DESLIGA);
       break;      
+    case cWebServer:
+      // recebe SSID e senha do WebSocker (PC ou App)
+      if (!vClient) { vClient = vServer.available(); } 
+      if (vClientSSID_OK) {vEstado = cConnectToSSID;}  
+      else {
+        if ((vClient) and (vEstado != cWebSocketMenu)) {
+          msgln("Client Socket Connected."); 
+          msgln(" ");
+          msgln("Receiving information from App : cWebServer ...");
+          while ((vClient.connected()) and (vEstado != cWebSocketMenu)) {
+            if (vClient.available()) {
+              String line = vClient.readString();
+              debugln("cWebServer--------------------------");
+              debugln(line);
+              line.trim();
+              if (line.indexOf("[SSID]") > -1) {
+                msg("SSID .... : ");
+                vClientSSID = line.substring(6);
+                msgln(vClientSSID);
+                delay(300);
+                vClient.println("[OK]");                
+              } 
+              if (line.indexOf("[PWD]") > -1) {
+                msg("Senha ... : ");
+                vClientPWD = line.substring(5);
+                msgln(vClientPWD);
+                delay(300);
+                vClient.println("[OK]");
+              }
+              if (line.indexOf("[END]") > -1) {
+                delay(500);                
+                vClient.println("[OK]\n");
+                msgln(" ");
+                vKdID = " ";
+                vKdIP = " ";
+                saveCredentials();
+                vEstado = cWebSocketMenu;
+              }
+            }
+          }
+          debugln("SAIU cWebServer - vClient.connected() NOT -------------------------- ");          
+        }
+      }
+    break;
+    case cWebSocketMenu:
+      // envia SSID e senha para WebSocker (PC ou App)
+      if (!vClient) { vClient = vServer.available(); } 
+      if (vClient) {
+        msgln(" ");
+        msgln("WebServerMenu - Client Socket Connected."); 
+        msgln("Receiving information from App : cWebSocketMenu ...");
+        while ((vClient.connected()) and (vEstado == cWebSocketMenu)) {
+          if (vClient.available()) {
+            String line = vClient.readString();
+            debugln("cWebServer-------------------------- ");
+            debugln(line);
+            line.trim();
+            if (line.indexOf("[ENVIASTATUS]") > -1) {
+              msgln("Envia Status.");
+              showConfig();
+              vClient.print("[SSID]");
+              vClient.print(vClientSSID);
+              vClient.print("[PWD]");              
+              vClient.print(vClientPWD);              
+              vClient.println("[OK]\n");              
+            } 
+            if (line.indexOf("[CONNECTTOSSID]") > -1) {
+              msgln("Connect to SSID Client.");
+              delay(500);
+              vClient.println("[OK]\n");
+              delay(500);
+              vClient.println("[OK]\n");
+              vClient.stop();
+              vServer.stop();
+              vEstado = cConnectToSSID;                            
+            }
+          }
+        }
+      }
+      break;    
+    case cConnectToSSID:
+      ConnectToSSID();
+      vEstado = cStatusSSID;
+      break; 
+    case cStatusSSID:
+      if (!StatusSSID()) { vEstado = cErro; }
+      break;
+    case cConnectSSID_Ok:      
+      vConnectSSID_Ok = "OK";
+      saveCredentials();          
+      vServer.begin();
+      vEstado = cNothing;
+      break;
     case cNothing:   
       break;
     case cErro :
@@ -199,6 +302,74 @@ void loop() {
   }
 }
 
+void ConnectToSSID() {
+  msgln(" ");
+  msg("Desligando AP ... :");
+  if (WiFi.softAPdisconnect(true)) { msgln("ConnectToSSID OK"); } else { msgln("Erro ao desligar"); }
+  msgln(" ");
+  msg("Connecting WIFI client ");
+  msg( ssid );
+  msg(" ... ");
+  msg( password );
+  msgln(" ... ");
+  WiFi.disconnect();
+  WiFi.begin ( ssid, password );
+  //WiFi.begin ( "Restaurante DonDoh", "mar48621" );
+  //WiFi.begin ( "ArnaldiNET", "arianeeduarda11" );
+  WiFi.waitForConnectResult();
+}
+
+boolean StatusSSID() {
+  vErro = false;
+  int s = WiFi.status();
+  switch (s) {
+    case WL_CONNECT_FAILED:      
+      msgln ("WL_CONNECT_FAILED");
+      WiFi.disconnect();
+      if (vConnectSSID_Ok == "NT") {
+        debugln("se nunca se conectou nessa rede - apaga as credenciais .");
+        eraseCredentials();
+      } else {
+        vEstado = cInicio;
+      }
+      break;
+    case WL_CONNECTED:
+      if (vMsg) {
+        Serial.println( " " );
+        Serial.print( "Connected to ... : " );
+        Serial.println ( vClientSSID );
+        Serial.print ( "IP address ..... : " );
+        Serial.println ( WiFi.localIP() );  
+        Serial.print ( "Kit ID ......... : " );
+        Serial.println ( vKdID );
+        Serial.print ( "Kit IP Fixo .... : " );
+        Serial.println ( vKdIP );
+      }
+      //
+      wifiIP = WiFi.localIP();
+      wifiMK = WiFi.subnetMask();
+      wifiGW = WiFi.gatewayIP(); 
+      //
+      vEstado = cConnectSSID_Ok;
+      break;
+    case WL_NO_SSID_AVAIL:
+      msgln ("SSID Invalida.");
+      WiFi.disconnect();
+      if (vConnectSSID_Ok == "NT") {
+        debugln("se nunca se conectou nessa rede - apaga as credenciais .");
+        eraseCredentials();
+      } else {
+        vSSIDInvalida = true; // vai para teclado, ve se esta em reset de fabrica, se nao tenta novamente a conexao
+        vEstado = cTeclado;
+      }
+      break;
+    default:
+      debugln("WIFI Connect - retorno nao classificado");      
+      // 2018 04 02
+      vEstado = cInicio;        
+  }
+  return !vErro;
+}
 
 void showConfig() {  
   if (vMsg) {    
