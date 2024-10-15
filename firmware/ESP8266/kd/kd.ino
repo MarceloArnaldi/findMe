@@ -1,6 +1,6 @@
 /*
  * 
- * findMe
+ * Achira
  * 
  * Monitor Serial : 115.200
  * 
@@ -8,6 +8,17 @@
  * 
  * Doko - onde
  * KOCHIRA (nesta direção), SOCHIRA (nessa direção), ACHIRA (naquela direção), e DOCHIRA (em qual direção
+ * 
+ * TO DO
+ * 
+ * listar os espectro das redes WIFI
+ * enviar para o MQTT - KD<cTp><cNS>/ESPECTRO01/BSSID:SINAL  ???
+ * Acordar - conectar no WIFI - ( scanear as redes - enviar para MQTT ) * n vezes - dormir
+ * ter uma lista de SSIDs possiveis de se conetar
+ * receber e armazenas a lista de SSID usados em (1)
+ * ao nao conseguir conectar o SSID ir para o proximo
+ * armazenar o ultimo SSID que conectou e comecar da ai
+ * receber e trocar as credenciais do mqtt
  * 
  */
 
@@ -33,6 +44,10 @@ const int cConnectToSSID    = 5; // Tenta a conexao na rede WIFI do cliente
 const int cStatusSSID       = 6; // Verifica a conexao na rede WIFI do cliente
 const int cConnectSSID_Ok   = 7; // Informa via LED que a conexÃ£o na rede SSID informada foi com sucesso
 const int cWebSocketMenu    = 11; // Aguarda comando para enviar os dados de configuracao para o App ou o comando para conectar a rede SSID do cliente 
+const int cTeclado          = 12; // le teclado 
+const int cMQTT_Config      = 13;
+const int cMQTT_Connect     = 14;
+const int cScannerSSID      = 15;
 const int cApagarEEPROM     = 90;
 const int cLerEEPROM        = 91;
 const int cGravarEEPROM     = 92;
@@ -47,34 +62,34 @@ const byte    DESLIGA       = LOW;
 const int     SocketPort    = 22022;
 const int     aAP_IP[4]     = {192, 168, 47, 1};
 // Variaveis Globais
-String        vMsgInicial;
-String        vAux;
-int           vEstado                   = 0;
-boolean       vConnected                = false;
-int           vStatus                   = WL_IDLE_STATUS;
-boolean       vErro                     = false;
-boolean       vClientSSID_OK            = false;
-String        vConnectSSID_Ok           = "NT"; // armazena se a conexao com SSID foi feita com sucesso - OK ou NT
-boolean       vmqttPort_OK              = false;
-boolean       vDebug                    = true;
-boolean       vMsg                      = true;
+String        vMsgInicial        = "";
+String        vAux               = "";
+int           vEstado            = 0;
+boolean       vConnected         = false;
+boolean       vErro              = false;
+boolean       vClientSSID_OK     = false;
+String        vConnectSSID_Ok    = "NT"; // armazena se a conexao com SSID foi feita com sucesso - OK ou NT
+String        vMqtt_OK           = "NT";
+boolean       vSSIDInvalida      = false;
+boolean       vDebug             = true;
+boolean       vMsg               = true;
 // Variaveis usadas para gravar na EEPROM
-char          kdid[32] = "";           // vkdid
-char          kdip[32] = "";           // vkdip
-char          ssid[32] = "";           // vClientSSID
-char          password[32] = "";       // vClientPWD
+char          kdid[32]           = ""; // vkdid
+char          kdip[32]           = ""; // vkdip
+char          ssid[32]           = ""; // vClientSSID
+char          password[32]       = ""; // vClientPWD
 char          connectSSID_Ok[32] = ""; // vConnectSSID_Ok 
-char          apptoken[32] = "";       // appToken
-char          mqttURL[32]  = "";       // vmqttURL
-char          mqttPort[32] = "";       // vmqttPort
+char          mqtt_Ok[32]        = ""; // vMqtt_OK
+char          apptoken[32]       = ""; // appToken
+char          mqttURL[32]        = ""; // vmqttURL
+char          mqttPort[32]       = ""; // vmqttPort
 // Modulo
-String        vkdid    = "0";          // ID do modulo
-String        vkdip    = "0.0.0.0";    // ID do mudulo
-String        appToken = "0000000000"; // ID do APP - quando o modulo eh adcionado no APP ele recebe o ID do APP
+String        vkdid              = "0";          // ID do modulo
+String        vkdip              = "0.0.0.0";    // ID do mudulo
+String        appToken           = "0000000000"; // ID do APP - quando o modulo eh adcionado no APP ele recebe o ID do APP
 // Modulo - usado para atualizar remotamewnte - WebSocket
 String        vKdID;
 String        vKdIP;
-
 // SSID AP
 char          aSSID[19];
 //const char    *softAP_password = "legooluskit"; 
@@ -96,13 +111,26 @@ WiFiClient    MQTTClient;
 WiFiClient    MQTTClientLocal;
 PubSubClient  MQTT(MQTTClient);
 PubSubClient  MQTTLocal(MQTTClientLocal);
-String        vmqttURL  = "mqtt.legoolus.com.br"; // BROKER_MQTT
-String        vmqttPort = "1883"; // BROKER_PORT
-char*         BROKER_MQTT_LOCAL  = "255.255.255.255";
+boolean       MQTTLocalOk        = false;   // informa se existe IP da MC e o Broker MQTT Local foi configurtado
+boolean       MQTTLocalConnected = false;   // informa se o Broker MQTT Local esta conectado
+boolean       MQTTConnected      = false;   // informa se o Broker MQTT Remoto esta conectado
+int           MQTTLocalCount     = 3100000; // Temporiza as tentativas de conexao ao Broker MQTT Local - ele comeca com valor para tentar a conexao na primeira vez que passa pela verificacao - 3100000 = 1 mim
+int           MQTTLocalCountStep = 155000;  // se desconectou o KD tenta conectar um vez em 5 segundos e depois a cada 1 mim - 155.000 = 5 seg
+int           MQTTCount          = 3100000; // Temporiza as tentativas de conexao ao Broker MQTT Remoto - ele comeca com valor para tentar a conexao na primeira vez que passa pela verificacao
+int           MQTTCountReset     = 0;       // Versao 1.04 - Temporiza para forcar o DISCONNECT do MQTT - porque sozinho ele nao identifica que houve perda da Internet
+int           MQTTState          = 99;      // Armazena o status da conexao MQTT - pode ser usado para reconectar ao servidor e/ou descobrir porque o KD foi desconectado do servidor
+String        vmqttURL           = "";
+int           vmqttPort          = 0;
+char*         BROKER_MQTT_LOCAL  = "255.255.255.255"; 
 const char*   BROKER_MQTT        = "mqtt.legoolus.com.br"; 
 const int     BROKER_PORT        = 1883;
 const char*   BROKER_USER        = "obtnegwv"; 
-const char*   BROKER_PASSWORD    = "7_JhuAE6nm02";
+const char*   BROKER_PASSWORD    = "7_JhuAE6nm02"; 
+char*         MASTER_TOPIC       = "KD00000000/#";
+char*         SUBTOPIC_STATUS    = "STATUS"; // Status das saidas do LK
+char*         SUBTOPIC_SETIP     = "SETIP";  // TOPIC_SETIP - Sub topico de Publicacao com o valor do IP do LK  
+char*         SUBTOPIC_SCAN_SSID = "SCANSSID";  
+char*         CLIENT_MQTT        = "KD00000000";
 
 void setup() {
   // Hardware
@@ -124,6 +152,25 @@ void setup() {
   vMsgInicial.concat(" - ns : ");
   vMsgInicial.concat(cNS);
   vEstado = cInicio;
+  // MQTT
+  MQTT.setServer(BROKER_MQTT, BROKER_PORT);   
+  MQTT.setCallback(callbackMQTT);    
+  vMsgInicial = "KD";
+  vMsgInicial.concat(cTpNS);
+  vMsgInicial.concat(cNS);
+  vMsgInicial.toCharArray(CLIENT_MQTT, 11);   
+  if (vMsg) {
+    Serial.println ( " " );
+    Serial.print ( "BROKER_MQTT  .... : " );
+    Serial.println ( BROKER_MQTT );
+    Serial.print ( "BROKER_MQTT_LOCAL : " );
+    Serial.println ( BROKER_MQTT_LOCAL );
+    Serial.print ( "PORT ............ : " );
+    Serial.println ( BROKER_PORT );
+    Serial.print ( "CLIENT_MQTT  .... : " );
+    Serial.println ( CLIENT_MQTT );
+    Serial.println ( " " );
+  }
 }
 
 void loop() {
@@ -135,22 +182,20 @@ void loop() {
       vEstado = cLerEEPROM;
       break;
     case cApagarEEPROM:
-      msgln("cApagarEEPROM");
+      debugln("cApagarEEPROM");
       eraseCredentials();
       vEstado = cLerEEPROM;
       break;
     case cLerEEPROM:
-      msgln("cLerEEPROM");
       loadCredentials();
       vEstado = cShowEEPROM;
       break;
     case cShowEEPROM:
-      msgln("cShowEEPROM");
       showConfig();
-      vEstado = cAPConfig;
+      if (vClientSSID_OK) { vEstado = cConnectToSSID; } else { vEstado = cAPConfig; }
       break;
     case cGravarEEPROM:
-      msgln("cGravarEEPROM");
+      debugln("cGravarEEPROM");
       vClientSSID = "Arnaldi";
       vClientPWD  = "AriEdu11@";
       delay(1000);
@@ -161,18 +206,19 @@ void loop() {
       showConfig();
       vEstado = cAPConfig;
       break;
-    case cAPConfig:      
+    case cAPConfig:
+      // Cria rede WIFI propria
       WiFi.softAPdisconnect(false);
       delay(150); 
       if (vMsg) {              
-        Serial.println("\n");
+        Serial.println(" ");
         Serial.print("AP SSID ... : ");
         Serial.println(aSSID);         
         Serial.print("AP Password : ");
         Serial.println(softAP_password);            
         Serial.print("AP IP ..... : ");
         Serial.println(WiFi.softAPIP());
-        Serial.println("\n");
+        Serial.println(" ");
       }
       delay(500);      
       msg("Configurando o AP ... ");
@@ -194,16 +240,16 @@ void loop() {
         vEstado = cErro;
       }
       break;
-    case cAPConnect:     
+    case cAPConnect:
+      // aguarda a conexao do client PC ou APP      
       if (WiFi.softAPgetStationNum() > 0) {
         msgln ( "Client Connect" );                
         vEstado = cWebServer;
-        vServer.begin();
+        //vServer.begin();
       }
-      digitalWrite(LED_1, DESLIGA);
       break;      
     case cWebServer:
-      // recebe SSID e senha do WebSocker (PC ou App)
+      // recebe dados da rede via WebSocker (PC ou App) a qual deve conectar
       if (!vClient) { vClient = vServer.available(); } 
       if (vClientSSID_OK) {vEstado = cConnectToSSID;}  
       else {
@@ -236,7 +282,7 @@ void loop() {
                 vClient.println("[OK]\n");
                 msgln(" ");
                 vKdID = " ";
-                vKdIP = " ";
+                vKdIP = " ";                
                 saveCredentials();
                 vEstado = cWebSocketMenu;
               }
@@ -245,9 +291,9 @@ void loop() {
           debugln("SAIU cWebServer - vClient.connected() NOT -------------------------- ");          
         }
       }
-    break;
+      break;
     case cWebSocketMenu:
-      // envia SSID e senha para WebSocker (PC ou App)
+      // envia os dados da rede WIFI para WebSocker (PC ou App) para validacao/informativo
       if (!vClient) { vClient = vServer.available(); } 
       if (vClient) {
         msgln(" ");
@@ -275,7 +321,7 @@ void loop() {
               delay(500);
               vClient.println("[OK]\n");
               vClient.stop();
-              vServer.stop();
+              //vServer.stop();
               vEstado = cConnectToSSID;                            
             }
           }
@@ -283,16 +329,38 @@ void loop() {
       }
       break;    
     case cConnectToSSID:
+      // tenta a conectar a rede WIFI
       ConnectToSSID();
       vEstado = cStatusSSID;
       break; 
     case cStatusSSID:
+      // veriifia o status da conexao WIFI
       if (!StatusSSID()) { vEstado = cErro; }
       break;
-    case cConnectSSID_Ok:      
+    case cConnectSSID_Ok:   
+      msgln("cConnectSSID_Ok");   
       vConnectSSID_Ok = "OK";
       saveCredentials();          
-      vServer.begin();
+      vEstado = cMQTT_Config;
+      msgln((String)vEstado); 
+      break;
+    case cMQTT_Config:
+      msgln("cMQTT_Config"); 
+      vEstado = cMQTT_Connect;
+      break;
+    case cMQTT_Connect:
+      if (WiFi.status() == WL_CONNECTED) {
+        testaMQTT();
+      } else {
+        msgln(" WiFi nao conectado ");
+      }
+      break;
+    case cScannerSSID:
+      listarRedesWiFi();
+      vEstado = cTeclado;
+      break;
+    case cTeclado:
+      msgln(" cTeclado ");
       vEstado = cNothing;
       break;
     case cNothing:   
@@ -304,7 +372,7 @@ void loop() {
 
 void ConnectToSSID() {
   msgln(" ");
-  msg("Desligando AP ... :");
+  msg("Desligando AP .. : ");
   if (WiFi.softAPdisconnect(true)) { msgln("ConnectToSSID OK"); } else { msgln("Erro ao desligar"); }
   msgln(" ");
   msg("Connecting WIFI client ");
@@ -314,9 +382,7 @@ void ConnectToSSID() {
   msgln(" ... ");
   WiFi.disconnect();
   WiFi.begin ( ssid, password );
-  //WiFi.begin ( "Restaurante DonDoh", "mar48621" );
-  //WiFi.begin ( "ArnaldiNET", "arianeeduarda11" );
-  WiFi.waitForConnectResult();
+  WiFi.waitForConnectResult();   
 }
 
 boolean StatusSSID() {
@@ -340,9 +406,9 @@ boolean StatusSSID() {
         Serial.println ( vClientSSID );
         Serial.print ( "IP address ..... : " );
         Serial.println ( WiFi.localIP() );  
-        Serial.print ( "Kit ID ......... : " );
+        Serial.print ( "KD ID .......... : " );
         Serial.println ( vKdID );
-        Serial.print ( "Kit IP Fixo .... : " );
+        Serial.print ( "KD IP Fixo ..... : " );
         Serial.println ( vKdIP );
       }
       //
@@ -365,7 +431,6 @@ boolean StatusSSID() {
       break;
     default:
       debugln("WIFI Connect - retorno nao classificado");      
-      // 2018 04 02
       vEstado = cInicio;        
   }
   return !vErro;
@@ -393,7 +458,6 @@ void showConfig() {
 }
 
 void loadCredentials() {
-  debugln("LoadCredencial   :");
   EEPROM.begin(2048);
   EEPROM.get(0, ssid);  
   EEPROM.get(0+sizeof(ssid), password);
@@ -404,16 +468,24 @@ void loadCredentials() {
   EEPROM.get(0+sizeof(ssid)+sizeof(password)+sizeof(kdid)+sizeof(kdip)+sizeof(mqttURL)+sizeof(mqttPort), connectSSID_Ok);
   EEPROM.put(0+sizeof(ssid)+sizeof(password)+sizeof(kdid)+sizeof(kdip)+sizeof(mqttURL)+sizeof(mqttPort)+sizeof(connectSSID_Ok), apptoken);
   EEPROM.end();
+  msgln("loadCredentials"); 
   vClientSSID     = String(ssid);
   vClientPWD      = String(password);  
   vkdid           = String(kdid);
   vkdip           = String(kdip);  
-  vmqttURL        = String(mqttURL);
-  vmqttPort       = String(mqttPort); 
   vConnectSSID_Ok = String(connectSSID_Ok);  
   appToken        = String(apptoken);
-  if ((vmqttPort.toInt() > 0) and (vmqttPort.toInt() < 99999)) { vmqttPort_OK = true; } else { vmqttPort_OK = false; }
+  if (vConnectSSID_Ok != "OK") { 
+    vClientSSID_OK = false;
+    eraseCredentials();
+  } else {
+    vClientSSID_OK = true;
+  }
   /*
+  vmqttURL        = String(mqttURL);
+  vmqttPort       = (int)mqttPort;
+  Serial.println(vmqttPort);  
+  appToken        = String(apptoken);
   if (((vClientSSID[0] == 0xFF) and (vClientSSID[1] == 0xFF) and (vClientSSID[2] == 0xFF) and (vClientSSID[3] == 0xFF)) or (vConnectSSID_Ok != "OK")) { 
     debugln("Sujeira na memoria ou SSID_NOT OK");
     eraseCredentials();
@@ -424,7 +496,6 @@ void loadCredentials() {
     vClientSSID_OK = true;
   }
   */
-  vClientSSID_OK = true;
 }
 
 void saveCredentials() {
@@ -433,9 +504,10 @@ void saveCredentials() {
   vkdid.toCharArray(kdid, sizeof(kdid) - 1);
   vkdip.toCharArray(kdip, sizeof(kdip) - 1);
   vmqttURL.toCharArray(mqttURL, sizeof(mqttURL) - 1);
-  vmqttPort.toCharArray(mqttPort, sizeof(mqttPort) - 1); 
+  String vmqttPort2 = "1880";
+  vmqttPort2.toCharArray(mqttPort, sizeof(mqttPort) - 1);
   vConnectSSID_Ok.toCharArray(connectSSID_Ok, sizeof(connectSSID_Ok) - 1);
-  appToken.toCharArray(apptoken, sizeof(apptoken) - 1);
+  appToken.toCharArray(apptoken, sizeof(apptoken) - 1); // versao 0.15
   EEPROM.begin(2048);  
   EEPROM.put(0, ssid);
   EEPROM.put(0+sizeof(ssid), password);
@@ -455,8 +527,10 @@ void eraseCredentials() {
   password[0] = 0;  
   kdid[0]     = 0;
   kdip[0]     = 0;
-  mqttURL[0]  = 0;
-  mqttPort[0] = 0;
+  strncpy(mqttURL, BROKER_MQTT, sizeof(mqttURL) - 1);
+  mqttURL[sizeof(mqttURL) - 1];
+  String vmqttPort2 = "1880";
+  vmqttPort2.toCharArray(mqttPort, sizeof(mqttPort) - 1);
   apptoken[0] = 0;
   vConnectSSID_Ok = "NT";
   vConnectSSID_Ok.toCharArray(connectSSID_Ok, sizeof(connectSSID_Ok) - 1);  
@@ -502,3 +576,165 @@ void pausa(int tempo) {
   digitalWrite(LED_1,LIGA);
   delay(500 * tempo);
 }
+
+void testaMQTT() {
+  msgln("testaMQTT");
+  if (MQTTState != MQTT.state()) {
+    MQTTState = MQTT.state();
+    Serial.println("MQTT State : " + String(MQTTState));
+  }
+  if (!MQTT.connected()) {
+    // 0.19 - Temporizar quando nao consegue connectar - para nao ficar tentando a toda hora
+    // 3.100.000 = 1 mim   
+    // 500.000 + - 10 segundos
+    if (MQTTCount > 50000) {
+      MQTTCount = 0;            
+      debugln(" ");
+      debugln("Tentando Conectar no MQTT remoto : ");
+      if (MQTT.connect(CLIENT_MQTT, BROKER_USER, BROKER_PASSWORD)) {
+          debug("Conectado ao Broker MQTT REMOTO com sucesso : ");              
+          debug(" - ");
+          debug(BROKER_MQTT);
+          debug(" - ");
+          debug(BROKER_USER);
+          debug(" - ");
+          debugln(BROKER_PASSWORD);                
+          MQTTConnected  = true;
+          vClientSSID_OK = true;
+          montaTopicosMQTT();
+          assinaturasMQTT();
+          // Toda vez que a conexao eh estabelecida - o KD publica seu IP e seu STATUS                            
+          enviaTopicoKDGenericoMQTT(SUBTOPIC_STATUS,"OK");
+          publicaTopicSetIPMQTT();
+          vEstado = cScannerSSID;
+          MQTT.loop();          
+      } else {              
+          debugln("Não foi possivel se conectar ao broker MQTT");
+          MQTTConnected = false;          
+      }
+    } else { 
+      msgln("MQTT coneccttado so que nao");
+      if ((MQTTCount % 100000) == 0) {  debug(" m ");  }
+      MQTTCount += 1; 
+    }    
+  } else { 
+    MQTTCountReset += 1;
+    if (MQTTCountReset > 3000000) {
+      MQTTCountReset = 0;
+      MQTTCount      = 500001;
+    }
+    MQTT.loop(); 
+  }  
+}
+
+void callbackMQTT(char* topic, byte* payload, unsigned int length) {
+  // versao 0.11 - MQTT - essa rotina eh ativada quando recebe alguma coisa dos itens assinados 
+  debugln(">> callbackMQTT");
+  
+  //armazena msg recebida em uma sring
+  payload[length] = '\0';
+  String strMSG = String((char*)payload);
+  strMSG.trim();
+  String strTopic = String((char*)topic);
+  strTopic.trim();
+  
+  // Versao 1.04 - Temporiza para forcar o DISCONNECT do MQTT 
+  MQTTCountReset = 0;
+  
+  debug("Callback Remoto Topico MQTT : ");
+  debug(topic);
+  debug(" - Mensagem :");
+  String aux  = String(topic);
+  aux.trim();
+
+  msg("Mensagem");
+  msgln(strMSG);
+  msg("strTopic");
+  msgln(strTopic);
+  msg("aux");
+  msgln(aux);
+}
+
+void montaTopicosMQTT() {
+  vMsgInicial = "KD";
+  vMsgInicial.concat(cTpNS);
+  vMsgInicial.concat(cNS);
+  vMsgInicial.concat("/#");
+  vMsgInicial.toCharArray(MASTER_TOPIC, 13);
+}
+
+void assinaturasMQTT() {
+  if (MQTT.connected()) {
+    msgln ( " " );
+    msgln ( "Broker MQTT Remoto - Topicos de Assinatura: " );
+    msgln ( MASTER_TOPIC );
+    MQTT.subscribe(MASTER_TOPIC);    
+  } else {
+    msgln ( " " );
+    msgln ( "Broker MQTT Remoto NENHUM Topico foi Assinado." );
+  }  
+  msgln ( " " );   
+}
+
+void publicaTopicSetIPMQTT() {
+  // Montando frame de SETIP com o IP do KD
+  char frameIP[15];  
+  vMsgInicial = "";  
+  vMsgInicial = WiFi.localIP().toString();
+  vMsgInicial.toCharArray(frameIP, vMsgInicial.length() + 1);
+  if (vMsgInicial.length() <= 14) {
+    frameIP[vMsgInicial.length() + 1] = '\0';
+  }
+  enviaTopicoKDGenericoMQTT(SUBTOPIC_SETIP,vMsgInicial);
+}
+
+void enviaTopicoKDGenericoMQTT(String pSubTopico, String pFrame) {
+  // Publica topicos do KD para o mundo
+  char*  TOPIC = ""; 
+  char   frameLocal[30];
+  String vGeneric = "KD";
+  boolean vEnviou = false;
+  vGeneric.concat(cTpNS);
+  vGeneric.concat(cNS);
+  vGeneric.concat("@/"); 
+  vGeneric.concat(pSubTopico); 
+  vGeneric.toCharArray(TOPIC, vGeneric.length() + 1); 
+  pFrame.toCharArray(frameLocal, pFrame.length() + 1);
+  if (pFrame.length() <= 30) {
+    frameLocal[pFrame.length() + 1] = '\0';
+  }
+  if (MQTT.connected()) { 
+    vEnviou = true;
+    MQTT.publish(TOPIC, frameLocal); 
+  }  
+  if (vEnviou) {
+    debug("enviaTopicoKDGenericoMQTT . : ");    
+    debug(pSubTopico);  
+    debug(" - ");
+    debugln(pFrame);  
+  }
+}
+
+void listarRedesWiFi() {
+  WiFi.scanDelete();
+  Serial.print("Iniciando o escaneamento das redes Wi-Fi ... ");  
+  int numeroRedes = WiFi.scanNetworks();
+  Serial.print(": Número de redes : ");
+  Serial.println(numeroRedes);
+  vMsgInicial = WiFi.BSSIDstr(i);
+  vMsgInicial.concat(":")
+  vMsgInicial.concat(WiFi.RSSI(i));
+  Serial.println(vMsgInicial);
+  enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);  
+}
+
+// void publicaTopicScannerSSID(int numeroRedes) {
+//   Serial.print('TOPICO');
+//   for (int i = 0; i < numeroRedes; i++) {
+//     vMsgInicial = WiFi.BSSIDstr(i);
+//     vMsgInicial.concat(":")
+//     vMsgInicial.concat(WiFi.RSSI(i));
+//     Serial.println(vMsgInicial);
+//     enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);
+//   }
+// }
