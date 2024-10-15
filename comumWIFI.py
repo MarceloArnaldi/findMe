@@ -278,7 +278,6 @@ def extrair_redes_wifi(texto):
         match_bssid = padrao_bssid.search(linha)
         if match_bssid:
             bssid_atual = match_bssid.group(1)
-
         match_sinal = padrao_sinal.search(linha)
         if match_sinal:
             sinal_atual = match_sinal.group(1)

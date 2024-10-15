@@ -153,7 +153,7 @@ def listar(modulo_, data):
 
 instalacao = consulta_instalacao(instalacao_id)
 sai = False
-while not sai:    
+while not sai:  
     opcao = 'L'
     modulo = main_menu()
     if modulo == 'X' or modulo == '': sai = True
