@@ -101,7 +101,7 @@ def monta_frame(topico):
             sinal_  = (int(dBm) + 100) * 2  # (−54 dBm + 100) * 2 de dBm para %
             it = {
                 "ssid"  : "ssid",
-                "bssid" : bssid_,
+                "bssid" : bssid_.lower(),
                 "sinal" : sinal_,
                 "dBm"   : dBm,
                 "sinais": []
@@ -245,14 +245,15 @@ def analisa(redes_):
             #pt('Redes',len(redes_))
             for rede_ in redes_:
                 index = next((item for item, d in enumerate(redes) if d['bssid'] == rede_['bssid']),-1)
-                redes[index]['Atual'] = rede_['sinal']
-                for area in areas:
-                    if area in redes[index]:
-                        redes[index][area+'_'] = calcular_distancia_diferenca(int(rede_['sinal']), redes[index][area])
-                        soma[area] += redes[index][area+'_']
-                        count[area] += 1
-                    else:
-                        redes[index][area+'_'] = None   
+                if index > -1:
+                    redes[index]['Atual'] = rede_['sinal']
+                    for area in areas:
+                        if area in redes[index]:
+                            redes[index][area+'_'] = calcular_distancia_diferenca(int(rede_['sinal']), redes[index][area])
+                            soma[area] += redes[index][area+'_']
+                            count[area] += 1
+                        else:
+                            redes[index][area+'_'] = None   
             # - probabilidade-------------------------------------------------------------------------------------------
             pt('Local',local['nome'])
             print(count)
@@ -270,6 +271,7 @@ def analisa(redes_):
                 probabilidades = {k: 0 for k in inversos.keys()}
             else:
                 probabilidades = {k: v / soma_inversos for k, v in inversos.items()}
+            area_provavel = -1
             area_provavel_percentual = 0
             for i, pr in enumerate(probabilidades):
                 pr_ = probabilidades[pr] * 100 
