@@ -32,7 +32,7 @@ def p(msg):
         if msg != None:
             print(msg)
 
-def pt(msg, msg2, tabulacao=15):
+def pt(msg, msg2, tabulacao=20):
     if msg != None:        
         if tabulacao >= len(msg):
             print(msg,' ' * (tabulacao - len(msg)),':',msg2)
