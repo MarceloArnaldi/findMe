@@ -13,16 +13,18 @@ def consulta_instalacao(instalacao_id):
     documento = collection.find_one({"instalacao": instalacao_id})
     del documento['_id']
     return documento
-def grava_instalacao(instalacao_id, obj):
-    locais = obj['locais']
+def grava_instalacao(instalacao_id, obj):  
+    locais = obj['locais']    
     collection.update_one(
         {"instalacao": instalacao_id},
         {"$set": {"locais": locais}}
     )
+    return True
 # - LOCAL -----------------------------------------------------------------------------------------
 def existe_local(data, local_):
     for x, local in enumerate(data.get("locais", [])):
         if local['nome'] == local_:
+            print('->',local['nome'],x)
             return True, x
     return False, -1
 def get_locais(data):
@@ -49,17 +51,20 @@ def add_local(data, local_):
     return True
 def apaga_local(data, local_):
     existe, index = existe_local(data, local_)
+    print('>',existe, index)
     if existe:
         del data['locais'][index]
     return True  
 # - AREA ------------------------------------------------------------------------------------------
 def existe_area(data, local_, area_):
-    for l, local in enumerate(data.get("locais", [])):
+    l = -1
+    for x, local in enumerate(data.get("locais", [])):
         if local['nome'] == local_:
+            l =  x
             for a, area in enumerate(local.get("areas",[])):
                 if area.get("nome") == area_:
                     return True, a, l
-    return False, -1, -1
+    return False, -1, l
 def get_areas(data, local_):
     existe, index = existe_local(data, local_)
     if existe:

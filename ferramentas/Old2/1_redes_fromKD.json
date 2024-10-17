@@ -1,0 +1,107 @@
+redes_ = [
+    {
+        "ssid": "ssid",
+        "bssid": "68:02:b8:f9:bf:42",
+        "sinal": 78,
+        "dBm": "-58",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "90:58:51:45:31:74",
+        "sinal": 26,
+        "dBm": "-87",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "52:57:9c:9e:ae:bc",
+        "sinal": 36,
+        "dBm": "-82",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "cc:32:e5:a5:e3:5a",
+        "sinal": 38,
+        "dBm": "-81",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "7a:8c:b5:21:99:92",
+        "sinal": 102,
+        "dBm": "-49",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "fa:8f:ca:6e:63:9e",
+        "sinal": 94,
+        "dBm": "-53",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "24:fd:0d:e3:dd:eb",
+        "sinal": 82,
+        "dBm": "-59",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "dc:a4:ca:ee:5f:5a",
+        "sinal": 40,
+        "dBm": "-80",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "48:2c:d0:8e:3a:e8",
+        "sinal": 66,
+        "dBm": "-67",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "48:2c:d0:8e:3a:ea",
+        "sinal": 64,
+        "dBm": "-68",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "7a:8c:b5:21:ad:b2",
+        "sinal": 56,
+        "dBm": "-72",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "a4:33:d7:01:65:c8",
+        "sinal": 62,
+        "dBm": "-69",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "a6:36:c7:ff:bf:f6",
+        "sinal": 54,
+        "dBm": "-73",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "a6:36:c7:9d:2a:10",
+        "sinal": 52,
+        "dBm": "-74",
+        "sinais": []
+    },
+    {
+        "ssid": "ssid",
+        "bssid": "a4:33:d7:b7:31:a8",
+        "sinal": 32,
+        "dBm": "-84",
+        "sinais": []
+    }
+]

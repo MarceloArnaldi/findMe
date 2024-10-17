@@ -1,0 +1,127 @@
+[
+    {
+        "ssid": "Arnaldi",
+        "bssid": "7a:8c:b5:71:99:93",
+        "sinal": 86.0
+    },
+    {
+        "ssid": "SSID Desconhecido",
+        "bssid": "78:8c:b5:51:ad:b3",
+        "sinal": 29.0
+    },
+    {
+        "ssid": "SSID Desconhecido",
+        "bssid": "78:8c:b5:51:99:92",
+        "sinal": 89.0
+    },
+    {
+        "ssid": "SUPER FAMILIA 2G TP-Link_EXT",
+        "bssid": "cc:32:e5:a5:e3:5a",
+        "sinal": 42.0
+    },
+    {
+        "ssid": "SUPER FAMILIA 2G TP-Link",
+        "bssid": "bc:c3:42:be:51:d0",
+        "sinal": 20.0
+    },
+    {
+        "ssid": "[LG_Wall-Mount A/C]265a",
+        "bssid": "a6:36:c7:c5:26:5a",
+        "sinal": 38.666666666666664
+    },
+    {
+        "ssid": "[LG_CeilingCassette A/C]2a10",
+        "bssid": "a6:36:c7:9d:2a:10",
+        "sinal": 75.66666666666667
+    },
+    {
+        "ssid": "Pat&Victor Twibi",
+        "bssid": "24:fd:0d:e3:dd:eb",
+        "sinal": 72.0
+    },
+    {
+        "ssid": "Pat&Victor Twibi",
+        "bssid": "24:fd:0d:e3:dd:ee",
+        "sinal": 78.0
+    },
+    {
+        "ssid": "CUNHA",
+        "bssid": "48:2c:d0:8e:3a:ec",
+        "sinal": 38.0
+    },
+    {
+        "ssid": "CUNHA",
+        "bssid": "48:2c:d0:8e:3a:e8",
+        "sinal": 73.33333333333333
+    },
+    {
+        "ssid": "Arnaldi",
+        "bssid": "7a:8c:b5:21:ad:b2",
+        "sinal": 65.0
+    },
+    {
+        "ssid": "Arnaldi",
+        "bssid": "7a:8c:b5:21:99:92",
+        "sinal": 90.0
+    },
+    {
+        "ssid": "Arnaldi",
+        "bssid": "7a:8c:b5:71:ad:b3",
+        "sinal": 30.666666666666668
+    },
+    {
+        "ssid": "PAT&VICTOR_2G",
+        "bssid": "68:02:b8:f9:bf:42",
+        "sinal": 86.0
+    },
+    {
+        "ssid": "ArnaldiNET",
+        "bssid": "a6:33:d7:01:65:cf",
+        "sinal": 84.33333333333333
+    },
+    {
+        "ssid": "CUNHA-Iot",
+        "bssid": "48:2c:d0:8e:3a:ea",
+        "sinal": 73.33333333333333
+    },
+    {
+        "ssid": "Sala de TV.o,",
+        "bssid": "fa:8f:ca:6e:63:9e",
+        "sinal": 90.0
+    },
+    {
+        "ssid": "[LG_CeilingCassette A/C]bff6",
+        "bssid": "a6:36:c7:ff:bf:f6",
+        "sinal": 70.0
+    },
+    {
+        "ssid": "ArnaldiNET",
+        "bssid": "a4:33:d7:01:65:c8",
+        "sinal": 83.0
+    },
+    {
+        "ssid": "[LG_Wall-Mount A/C]264d",
+        "bssid": "a6:36:c7:c5:26:4d",
+        "sinal": 24.0
+    },
+    {
+        "ssid": "Pat&Victor Twibi",
+        "bssid": "24:fd:0d:e3:dd:e3",
+        "sinal": 62.0
+    },
+    {
+        "ssid": "Pat&Victor Twibi",
+        "bssid": "24:fd:0d:e3:dd:e6",
+        "sinal": 24.0
+    },
+    {
+        "ssid": "SSID Desconhecido",
+        "bssid": "fa:8f:ca:3e:eb:71",
+        "sinal": 70.0
+    },
+    {
+        "ssid": "PAT&VICTOR_5G",
+        "bssid": "68:02:b8:f9:bf:43",
+        "sinal": 60.0
+    }
+]
