@@ -252,7 +252,7 @@ def analisa(redes_):
             # redes  -> sinal de cada bssid em cada area
             # calcula a "distancia" em dBm
             for rede_ in redes_:
-                print('>',rede_['bssid'])
+                #print('>',rede_['bssid'])
                 index = next((item for item, d in enumerate(redes) if d['bssid'] == rede_['bssid']),-1)
                 if index > -1:
                     #print(rede_['bssid'],':',rede_['sinal'],'->',redes[index])
@@ -281,8 +281,8 @@ def analisa(redes_):
             #exit()
             # - probabilidade-------------------------------------------------------------------------------------------
             pt('Local',local['nome'])
-            print(count)
-            print(soma)
+            #print(count)
+            #print(soma)
             # inversos = {k: 1 / v for k, v in soma.items()}
             # print(inversos)
             # soma_inversos = sum(inversos.values())
@@ -292,12 +292,12 @@ def analisa(redes_):
             # print('------------------')_
             inversos = {k: 1 / v if v != 0 else 0 for k, v in soma.items()}
             soma_inversos = sum(inversos.values())
-            print('soma_inversos',soma_inversos)
+            #print('soma_inversos',soma_inversos)
             if soma_inversos == 0:
                 probabilidades = {k: 0 for k in inversos.keys()}
             else:
                 probabilidades = {k: v / soma_inversos for k, v in inversos.items()}
-            print('probabilidades',probabilidades)                
+            #print('probabilidades',probabilidades)                
             area_provavel = -1
             area_provavel_percentual = 0
             for i, pr in enumerate(probabilidades):
