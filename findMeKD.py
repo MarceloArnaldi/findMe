@@ -93,12 +93,16 @@ def monta_frame(topico):
     if len(topico) > 8:
         kd = topico[:9]
         for bssid in gKD[kd]['bssids']:
-            sinal   = bssid.find('-')
-            bssid_  = bssid[:sinal-1]
-            dBm     = bssid[sinal:]
+            print(bssid)
+            virgula = bssid.find(';')
+            bssid_  = bssid[:virgula]
+            dBm     = bssid[virgula+1:]
+            virgula = dBm.find(';')
+            ssid    = dBm[virgula+1:]
+            dBm     = dBm[:virgula].replace('-','')
             sinal_  = (int(dBm) + 100) * 2  # (−54 dBm + 100) * 2 de dBm para %
             it = {
-                "ssid"  : "ssid",
+                "ssid"  : ssid,
                 "bssid" : bssid_.lower(),
                 "sinal" : sinal_,
                 "dBm"   : dBm,
