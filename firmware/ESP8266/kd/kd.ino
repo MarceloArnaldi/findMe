@@ -245,7 +245,7 @@ void loop() {
       if (WiFi.softAPgetStationNum() > 0) {
         msgln ( "Client Connect" );                
         vEstado = cWebServer;
-        //vServer.begin();
+        vServer.begin();
       }
       break;      
     case cWebServer:
@@ -715,17 +715,54 @@ void enviaTopicoKDGenericoMQTT(String pSubTopico, String pFrame) {
   }
 }
 
+void enviaTopicoKDGenericoLongoMQTT(String pSubTopico, String pFrame) {
+  // Publica topicos do KD para o mundo
+  char*  TOPIC = ""; 
+  char   frameLocal[40];
+  String vGeneric = "KD";
+  boolean vEnviou = false;
+  vGeneric.concat(cTpNS);
+  vGeneric.concat(cNS);
+  vGeneric.concat("@/"); 
+  vGeneric.concat(pSubTopico); 
+  vGeneric.toCharArray(TOPIC, vGeneric.length() + 1); 
+  pFrame.toCharArray(frameLocal, pFrame.length() + 1);
+  if (pFrame.length() <= 40) {
+    frameLocal[pFrame.length() + 1] = '\0';
+  }
+  if (MQTT.connected()) { 
+    vEnviou = true;
+    MQTT.publish(TOPIC, frameLocal); 
+  }  
+  if (vEnviou) {
+    debug("enviaTopicoKDGenericoMQTT . : ");    
+    debug(pSubTopico);  
+    debug(" - ");
+    debugln(pFrame);  
+  }
+}
+
+
 void listarRedesWiFi() {
   WiFi.scanDelete();
   Serial.print("Iniciando o escaneamento das redes Wi-Fi ... ");  
   int numeroRedes = WiFi.scanNetworks();
   Serial.print(": Número de redes : ");
-  Serial.println(numeroRedes);
-  vMsgInicial = WiFi.BSSIDstr(i);
-  vMsgInicial.concat(":")
-  vMsgInicial.concat(WiFi.RSSI(i));
-  Serial.println(vMsgInicial);
-  enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);  
+  Serial.println(numeroRedes);  
+  for (int i = 0; i < numeroRedes; i++) {    
+    vMsgInicial = WiFi.BSSIDstr(i); 
+    vMsgInicial.concat(";");
+    vMsgInicial.concat(WiFi.RSSI(i));
+    vMsgInicial.concat(";");    
+    int remainingChars = 40 - vMsgInicial.length();
+    String ssid = WiFi.SSID(i);
+    if (ssid.length() > remainingChars) {
+      ssid = ssid.substring(0, remainingChars);
+    }
+    vMsgInicial.concat(ssid);
+    enviaTopicoKDGenericoLongoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);
+  }
+  enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,"FIM");
 }
 
 // void publicaTopicScannerSSID(int numeroRedes) {
