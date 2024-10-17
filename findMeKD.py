@@ -81,8 +81,7 @@ def add_bssid(topico, msg):
     if 'FIM' in msg:
         set_status(topico,"off")
         global_redes_ = monta_frame(topico)
-        pj(global_redes_)
-        #global_redes_ = scanner_mqtt_mokado()
+        #pj(global_redes_)        
         return global_redes_
     else:        
         set_bssid(topico, msg)
@@ -90,7 +89,6 @@ def add_bssid(topico, msg):
 
 def monta_frame(topico):
     global gKD
-    #pj(gKD)
     redes_ = []
     if len(topico) > 8:
         kd = topico[:9]
@@ -106,7 +104,8 @@ def monta_frame(topico):
                 "dBm"   : dBm,
                 "sinais": []
             }
-            redes_.append(it)    
+            redes_.append(it)
+    gKD[kd]['redes'] = redes_
     return redes_
 
 def connect_mqtt():
@@ -219,6 +218,8 @@ def scanner_mqtt_mokado():
 
 def analisa(redes_):
     if len(redes_) > 0:
+        # redes = recupera todas as redes bssid e coloca o sinal de cada area
+        # TO DO isso pode ser armazenado em ves de ficar montando toda vez
         for local in instalacaoObj['locais']:
             redes = []
             areas = []
@@ -235,29 +236,53 @@ def analisa(redes_):
                         redes.append(it)
                     else:
                         redes[index][area['nome']] = spectro['c']
+            for rede in redes:
+                for area in areas:
+                    if area not in rede:
+                        rede[area] = 0
+            #pj(redes)                
             # - scanner -----------------------------------------------------------------------------------------------
             soma  = {}
             count = {}
             for area in areas: 
                 soma[area] = 0
                 count[area] = 0
-            #redes_ = scanner_mqtt_mokado()
-            #pt('Redes',len(redes_))
+            # localiza no array "redes" o bssid que o modulo informou, inclui a coluna "ATUAL" em redes e calcula a distancia
+            # redes_ -> from KD
+            # redes  -> sinal de cada bssid em cada area
+            # calcula a "distancia" em dBm
             for rede_ in redes_:
+                print('>',rede_['bssid'])
                 index = next((item for item, d in enumerate(redes) if d['bssid'] == rede_['bssid']),-1)
                 if index > -1:
-                    redes[index]['Atual'] = rede_['sinal']
+                    #print(rede_['bssid'],':',rede_['sinal'],'->',redes[index])
+                    #redes[index]['Atual'] = rede_['sinal']
+                    redes[index]['Atual'] = rede_['sinal'] if rede_['sinal'] < 100 else 100 
                     for area in areas:
                         if area in redes[index]:
-                            redes[index][area+'_'] = calcular_distancia_diferenca(int(rede_['sinal']), redes[index][area])
+                            #redes[index][area+'_'] = calcular_distancia_diferenca(int(rede_['sinal']), redes[index][area])
+                            redes[index][area+'_'] = calcular_distancia_diferenca(rede_['sinal'], redes[index][area])
                             soma[area] += redes[index][area+'_']
                             count[area] += 1
+                            #print(area,'->',rede_['sinal'],redes[index][area])
+                            #print(redes[index])
+                            #print(calcular_distancia_diferenca(int(rede_['sinal']), redes[index][area]))
+                            #print(redes[index])
+                            #print(redes[index]['Atual'],rede_['sinal'])
+                            #exit()
+                            #break
                         else:
-                            redes[index][area+'_'] = None   
+                            redes[index][area+'_'] = None
+                    #pj(redes[index])
+                    #print(redes[index]['Atual'],rede_['sinal'])
+                    #exit()
+                    #break
+            #pj(redes)                        
+            #exit()
             # - probabilidade-------------------------------------------------------------------------------------------
             pt('Local',local['nome'])
             print(count)
-            # print(soma)
+            print(soma)
             # inversos = {k: 1 / v for k, v in soma.items()}
             # print(inversos)
             # soma_inversos = sum(inversos.values())
@@ -267,10 +292,12 @@ def analisa(redes_):
             # print('------------------')_
             inversos = {k: 1 / v if v != 0 else 0 for k, v in soma.items()}
             soma_inversos = sum(inversos.values())
+            print('soma_inversos',soma_inversos)
             if soma_inversos == 0:
                 probabilidades = {k: 0 for k in inversos.keys()}
             else:
                 probabilidades = {k: v / soma_inversos for k, v in inversos.items()}
+            print('probabilidades',probabilidades)                
             area_provavel = -1
             area_provavel_percentual = 0
             for i, pr in enumerate(probabilidades):
@@ -288,10 +315,26 @@ def analisa(redes_):
             # - display tabulado - debug ------------------------------------------------------------------------------
             if show:
                 pd.set_option('display.max_rows', None)
-                colunas_ordenadas = ['ssid', 'bssid', 'Quartos', 'Social', 'Area Servico','Atual']
+                colunas_ordenadas = ['ssid', 'bssid', 'Atual']
                 for area in areas: colunas_ordenadas.append(area+'_')
                 df_redes = pd.DataFrame(redes)
-                print(df_redes[colunas_ordenadas])    
+                print(df_redes[colunas_ordenadas])
+                # f = open("modelo.txt", "w")
+                # for col in colunas_ordenadas: f.write(col+';')
+                # f.write('\n')
+                # for rede in redes:
+                #     print(rede)
+                #     for col in colunas_ordenadas:
+                #         if col in rede:
+                #             if str(rede[col]).find('0.') > -1:
+                #                 aux = str(rede[col])[:8].replace('.',',')
+                #             else:
+                #                 aux = str(rede[col])
+                #             f.write(aux+';')
+                #         else:
+                #             f.write('0'+';')
+                #     f.write('\n')
+                # f.close()
 
         #time.sleep(10)
         #os.system('cls')

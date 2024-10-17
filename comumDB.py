@@ -24,6 +24,7 @@ def grava_instalacao(instalacao_id, obj):
 def existe_local(data, local_):
     for x, local in enumerate(data.get("locais", [])):
         if local['nome'] == local_:
+            print('->',local['nome'],x)
             return True, x
     return False, -1
 def get_locais(data):
@@ -50,6 +51,7 @@ def add_local(data, local_):
     return True
 def apaga_local(data, local_):
     existe, index = existe_local(data, local_)
+    print('>',existe, index)
     if existe:
         del data['locais'][index]
     return True  

@@ -1,0 +1,371 @@
+redes =     {
+    "ssid": "ssid",
+    "bssid": "cc:32:e5:a5:e3:5a",
+    "Cozinha": 35.699999999999996,
+    "Jantar": 52.699999999999996,
+    "Home Theater": 40.8
+},
+{
+    "ssid": "ssid",
+    "bssid": "c0:3d:d9:74:93:a0",
+    "Cozinha": 37.4,
+    "Jantar": 52.699999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "7a:8c:b5:21:99:92",
+    "Cozinha": 56.1,
+    "Jantar": 91.8,
+    "Home Theater": 100,
+    "Sala de TV": 52.699999999999996,
+    "Suite Master": 42.5,
+    "Servico": 68.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "f2:a7:31:22:4b:62",
+    "Cozinha": 18.7,
+    "Sala de TV": 34.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "7a:8c:b5:21:ad:b2",
+    "Cozinha": 17.0,
+    "Jantar": 56.1,
+    "Home Theater": 57.8,
+    "Sala de TV": 100,
+    "Suite Master": 100,
+    "Servico": 27.2
+},
+{
+    "ssid": "ssid",
+    "bssid": "fa:8f:ca:6e:63:9e",
+    "Cozinha": 39.1,
+    "Jantar": 69.7,
+    "Home Theater": 83.3,
+    "Sala de TV": 45.9,
+    "Suite Master": 30.599999999999998,
+    "Servico": 56.1
+},
+{
+    "ssid": "ssid",
+    "bssid": "a4:22:49:92:ea:54",
+    "Cozinha": 23.8,
+    "Sala de TV": 45.9
+},
+{
+    "ssid": "ssid",
+    "bssid": "60:22:32:f3:b5:82",
+    "Cozinha": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "dc:a4:ca:ee:5f:5a",
+    "Cozinha": 18.7,
+    "Home Theater": 49.3
+},
+{
+    "ssid": "ssid",
+    "bssid": "3c:f9:f0:ae:c3:22",
+    "Cozinha": 13.6
+},
+{
+    "ssid": "ssid",
+    "bssid": "48:2c:d0:8e:3a:e8",
+    "Cozinha": 17.0,
+    "Home Theater": 66.3,
+    "Sala de TV": 30.599999999999998,
+    "Suite Master": 28.9,
+    "Servico": 30.599999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "e4:c3:2a:9a:e9:96",
+    "Cozinha": 34.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "30:de:4b:ed:1d:72",
+    "Cozinha": 25.5,
+    "Jantar": 44.199999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "a4:33:d7:01:65:c8",
+    "Cozinha": 35.699999999999996,
+    "Jantar": 47.6,
+    "Home Theater": 95.2,
+    "Suite Master": 35.699999999999996,
+    "Servico": 44.199999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "e6:fa:c4:4d:1f:b6",
+    "Cozinha": 18.7
+},
+{
+    "ssid": "ssid",
+    "bssid": "f2:a7:31:42:4b:62",
+    "Cozinha": 13.6,
+    "Sala de TV": 23.8
+},
+{
+    "ssid": "ssid",
+    "bssid": "bc:c3:42:be:51:d0",
+    "Jantar": 47.6
+},
+{
+    "ssid": "ssid",
+    "bssid": "d4:6e:0e:b2:0e:9f",
+    "Jantar": 35.699999999999996,
+    "Home Theater": 61.199999999999996,
+    "Suite Master": 32.3,
+    "Servico": 27.2
+},
+{
+    "ssid": "ssid",
+    "bssid": "74:3a:ef:5b:cf:3d",
+    "Jantar": 28.9
+},
+{
+    "ssid": "ssid",
+    "bssid": "24:fd:0d:e3:dd:eb",
+    "Jantar": 81.6,
+    "Home Theater": 100,
+    "Servico": 35.699999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "24:fd:0d:e3:dd:e3",
+    "Jantar": 42.5,
+    "Suite Master": 68.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "48:2c:d0:8e:3a:ea",
+    "Jantar": 57.8,
+    "Home Theater": 66.3,
+    "Sala de TV": 25.5,
+    "Suite Master": 27.2,
+    "Servico": 32.3
+},
+{
+    "ssid": "ssid",
+    "bssid": "a6:36:c7:9d:2a:10",
+    "Jantar": 64.6,
+    "Home Theater": 78.2,
+    "Sala de TV": 35.699999999999996,
+    "Suite Master": 25.5,
+    "Servico": 42.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "a6:36:c7:ff:bf:f6",
+    "Jantar": 42.5,
+    "Home Theater": 59.5,
+    "Suite Master": 23.8,
+    "Servico": 32.3
+},
+{
+    "ssid": "ssid",
+    "bssid": "90:0a:62:36:14:7f",
+    "Jantar": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "a4:33:d7:b7:31:a8",
+    "Jantar": 25.5,
+    "Home Theater": 28.9,
+    "Servico": 10.2
+},
+{
+    "ssid": "ssid",
+    "bssid": "68:02:b8:f9:bf:42",
+    "Home Theater": 100,
+    "Sala de TV": 42.5,
+    "Servico": 52.699999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "52:57:9c:9e:ae:bc",
+    "Home Theater": 47.6
+},
+{
+    "ssid": "ssid",
+    "bssid": "dc:92:72:71:35:92",
+    "Home Theater": 13.6,
+    "Suite Master": 30.599999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "a6:36:c7:c5:26:4d",
+    "Home Theater": 40.8,
+    "Sala de TV": 59.5,
+    "Suite Master": 56.1
+},
+{
+    "ssid": "ssid",
+    "bssid": "90:58:51:45:31:74",
+    "Sala de TV": 44.199999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "60:e3:27:cf:9d:58",
+    "Sala de TV": 52.699999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "98:77:e7:7d:01:53",
+    "Sala de TV": 34.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "f8:2d:c0:23:0b:22",
+    "Sala de TV": 22.099999999999998,
+    "Suite Master": 22.099999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "9c:63:5b:88:b8:80",
+    "Sala de TV": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "66:a4:b7:b7:a5:b6",
+    "Sala de TV": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "66:a4:b7:b7:a1:2e",
+    "Sala de TV": 28.9
+},
+{
+    "ssid": "ssid",
+    "bssid": "90:0a:62:52:82:4f",
+    "Sala de TV": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "e8:de:27:ca:ec:08",
+    "Sala de TV": 22.099999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "3e:f9:f0:1e:c3:22",
+    "Sala de TV": 23.8
+},
+{
+    "ssid": "ssid",
+    "bssid": "50:c7:bf:c9:0d:fa",
+    "Sala de TV": 20.4
+},
+{
+    "ssid": "ssid",
+    "bssid": "20:c9:d0:1c:32:ab",
+    "Sala de TV": 37.4
+},
+{
+    "ssid": "ssid",
+    "bssid": "a6:36:c7:c5:26:5a",
+    "Sala de TV": 34.0,
+    "Suite Master": 34.0,
+    "Servico": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "4e:ba:d7:be:bb:7f",
+    "Sala de TV": 28.9
+},
+{
+    "ssid": "ssid",
+    "bssid": "1c:3b:f3:f3:02:27",
+    "Sala de TV": 18.7,
+    "Servico": 23.8
+},
+{
+    "ssid": "ssid",
+    "bssid": "08:c7:f5:29:5c:82",
+    "Suite Master": 34.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "bc:0f:9a:ef:8d:68",
+    "Suite Master": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "68:9e:29:be:0e:87",
+    "Suite Master": 20.4
+},
+{
+    "ssid": "ssid",
+    "bssid": "14:eb:b6:c8:8d:72",
+    "Suite Master": 34.0,
+    "Servico": 13.6
+},
+{
+    "ssid": "ssid",
+    "bssid": "50:0f:f5:03:ed:48",
+    "Suite Master": 15.299999999999999
+},
+{
+    "ssid": "ssid",
+    "bssid": "68:d4:0c:d6:82:6f",
+    "Suite Master": 25.5
+},
+{
+    "ssid": "ssid",
+    "bssid": "f4:54:20:52:c1:9f",
+    "Suite Master": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "0c:80:63:22:63:1a",
+    "Suite Master": 22.099999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "08:7e:64:84:3d:98",
+    "Suite Master": 22.099999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "44:3b:32:f4:1c:6c",
+    "Suite Master": 34.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "a0:3e:1a:2a:db:fa",
+    "Servico": 35.699999999999996
+},
+{
+    "ssid": "ssid",
+    "bssid": "6c:ba:b8:ff:6c:51",
+    "Servico": 22.099999999999998
+},
+{
+    "ssid": "ssid",
+    "bssid": "84:01:12:eb:cd:5d",
+    "Servico": 18.7
+},
+{
+    "ssid": "ssid",
+    "bssid": "68:ff:7b:84:13:b2",
+    "Servico": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "1a:eb:b6:c8:8d:72",
+    "Servico": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "6a:77:da:12:79:f7",
+    "Servico": 17.0
+},
+{
+    "ssid": "ssid",
+    "bssid": "68:77:da:60:e0:67",
+    "Servico": 30.599999999999998
+}
+]
