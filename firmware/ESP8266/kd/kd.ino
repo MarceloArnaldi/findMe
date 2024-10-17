@@ -245,7 +245,7 @@ void loop() {
       if (WiFi.softAPgetStationNum() > 0) {
         msgln ( "Client Connect" );                
         vEstado = cWebServer;
-        //vServer.begin();
+        vServer.begin();
       }
       break;      
     case cWebServer:
@@ -721,11 +721,15 @@ void listarRedesWiFi() {
   int numeroRedes = WiFi.scanNetworks();
   Serial.print(": Número de redes : ");
   Serial.println(numeroRedes);
-  vMsgInicial = WiFi.BSSIDstr(i);
-  vMsgInicial.concat(":")
-  vMsgInicial.concat(WiFi.RSSI(i));
-  Serial.println(vMsgInicial);
-  enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);  
+  for (int i = 0; i < numeroRedes; i++) {
+    vMsgInicial = Serial.println(WiFi.SSID(i)); 
+    vMsgInicial.concat(";");
+    vMsgInicial.concat(WiFi.BSSIDstr(i));
+    vMsgInicial.concat(";");
+    vMsgInicial.concat(WiFi.RSSI(i));
+    enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,vMsgInicial);
+  }
+  enviaTopicoKDGenericoMQTT(SUBTOPIC_SCAN_SSID,"FIM");
 }
 
 // void publicaTopicScannerSSID(int numeroRedes) {
