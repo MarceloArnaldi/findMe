@@ -1,1 +1,1 @@
-python scannerOne.py
+python scannerOneFromESP.py

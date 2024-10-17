@@ -1,12 +1,12 @@
 import os
 import sys
 import json
+from pymongo import MongoClient
 os.system('cls')
 sys.path.insert(1, '../')
 
 from comum     import p, pt, pj, it, set_env_bat, pausa
-from comumDB   import consulta_instalacao, grava_instalacao
-from comumDB   import get_locais, atualiza_nome_local, add_local
+from comumDB   import get_locais, atualiza_nome_local
 from comumDB   import get_areas, atualiza_nome_area, add_area
 from comumDB   import existe_area, exclui_todos_espectros, registra_espectros
 from comumWIFI import scanner_media, monta_espectros
@@ -34,6 +34,36 @@ def get_modulo(opcao_):
             if opcao_ == 'E':
                 return 'ESPECTRO'
     return 'indefiinido'
+
+client = MongoClient("mongodb+srv://marceloarnaldi:BITh5VIzm3vY3Eoc@clusterdev.syoui.mongodb.net/?retryWrites=true&w=majority&appName=ClusterDev")
+db = client['ClusterDev']
+collection = db['instalacoes']
+
+def consulta_instalacao(instalacao_id):
+    documento = collection.find_one({"instalacao": instalacao_id})
+    del documento['_id']
+    return documento
+
+def existe_local(data, local_):
+    for x, local in enumerate(data.get("locais", [])):
+        if local['nome'] == local_:
+            return True, x
+    return False, -1
+
+def add_local(data, local_):
+    data['locais'].append({
+        'nome': local_,
+        'areas': []
+    })
+
+def grava_instalacao(instalacao_id, obj):
+    print('gravando ... ', instalacao_id)
+    locais = obj['locais']
+    print(locais)
+    collection.update_one(
+        {"instalacao": instalacao_id},
+        {"$set": {"locais": locais}}
+    )
 
 def main_menu():
     os.system('cls')
@@ -107,11 +137,8 @@ def criar(modulo_, data):
     if sn == 's':
         if modulo_ == 'L': 
             add_local(data, nome)
-            os.environ['LOCAL'] = nome
-            os.environ['AREA']  = ''
         if modulo_ == 'A': 
             add_area(data, local, nome)
-            os.environ['AREA'] = nome
         grava_instalacao(instalacao_id, data)
 
 def listar(modulo_, data):
@@ -168,9 +195,11 @@ while not sai:
             if opcao == 'C':
                 criar(modulo, instalacao)
     if modulo == 'C':
+        instalacao = consulta_instalacao(instalacao_id)
         print(json.dumps(instalacao,indent=4))
         enter = input('ENTER para continuar')        
     if modulo == 'S':
+        instalacao = consulta_instalacao(instalacao_id)
         os.system('cls')
         pt('Instalacao',os.environ.get('INSTALACAO'))
         pt('Local',os.environ.get('LOCAL'))
